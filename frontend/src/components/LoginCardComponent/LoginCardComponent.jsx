@@ -1,6 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 
 const LoginCardComponent = () => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleUsernameChange = (e) => {
+    setUsername(e.target.value);
+  };
+
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    console.log("Login attempt with:", { username, password });
+    // Aquí puedes agregar la lógica de login
+  };
 
   return (
     <section className="h-100 gradient-form" style={{ backgroundColor: "#eee" }}>
@@ -23,7 +39,7 @@ const LoginCardComponent = () => {
                       <h4 className="mt-1 mb-5 pb-1 title-rounded">LIBROPIA</h4>
                     </div>
 
-                    <form>
+                    <form onSubmit={handleLogin}>
                       <p>Please login to your account</p>
 
                       <div className="form-outline mb-4">
@@ -32,7 +48,8 @@ const LoginCardComponent = () => {
                           id="form2Example11"
                           className="form-control"
                           data-mdb-input-init
-                          
+                          value={username}
+                          onChange={handleUsernameChange}
                         />
                         <label className="form-label" htmlFor="form2Example11">
                           Username
@@ -45,6 +62,8 @@ const LoginCardComponent = () => {
                           id="form2Example22"
                           className="form-control"
                           data-mdb-input-init
+                          value={password}
+                          onChange={handlePasswordChange}
                         />
                         <label className="form-label" htmlFor="form2Example22">
                           Password
@@ -56,7 +75,7 @@ const LoginCardComponent = () => {
                           data-mdb-button-init
                           data-mdb-ripple-init
                           className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
-                          type="button"
+                          type="submit"
                         >
                           Log in
                         </button>
