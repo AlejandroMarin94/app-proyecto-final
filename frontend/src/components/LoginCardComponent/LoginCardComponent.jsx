@@ -43,7 +43,7 @@ const LoginCardComponent = () => {
       setSuccess("Inicio de sesión exitoso");
       
       setTimeout(() => {
-        navigate("/dashboard");
+        navigate("/homepage");
       }, 1500);
     } catch (err) {
       setError(err.message);
