@@ -1,60 +1,96 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signup, login } from "../../services/authService";
 
 const LoginCardComponent = () => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isRegister, setIsRegister] = useState(false);
-  const [nombre, setNombre] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [email, setEmail] = useState("");
-  const [edad, setEdad] = useState("");
+  const navigate = useNavigate();
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    nombre: "",
+    apellidos: "",
+    email: "",
+    edad: "",
+    isRegister: false,
+  });
 
-  const handleUsernameChange = (e) => {
-    setUsername(e.target.value);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleInputChange = (propName, propValue) => {
+    setFormData(prevData => ({
+      ...prevData,
+      [propName]: propValue
+    }));
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleNombreChange = (e) => {
-    setNombre(e.target.value);
-  };
-
-  const handleApellidosChange = (e) => {
-    setApellidos(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handleEdadChange = (e) => {
-    setEdad(e.target.value);
-  };
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    console.log("Login attempt with:", { username, password });
-    // Aquí puedes agregar la lógica de login
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      const data = await login({ 
+        email: formData.username, 
+        password: formData.password 
+      });
+      console.log("Login exitoso:", data.userData);
+      
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleRegister = (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
-    console.log("Register attempt with:", { nombre, apellidos, email, edad });
-    // Aquí puedes agregar la lógica de registro
+    setLoading(true);
+    setError("");
+    setSuccess("");
+
+    try {
+      await signup({
+        name: formData.nombre,
+        lastName: formData.apellidos,
+        email: formData.email,
+        password: formData.password,
+      });
+      
+      setSuccess("Registro exitoso. Por favor, inicia sesión");
+      
+      setFormData(prevData => ({
+        ...prevData,
+        nombre: "",
+        apellidos: "",
+        email: "",
+        password: "",
+        isRegister: false,
+        username: "",
+      }));
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCreateNew = () => {
-    setIsRegister(true);
+    handleInputChange("isRegister", true);
   };
 
   const handleBackToLogin = () => {
-    setIsRegister(false);
-    setNombre("");
-    setApellidos("");
-    setEmail("");
-    setEdad("");
+    handleInputChange("isRegister", false);
+    setFormData(prevData => ({
+      ...prevData,
+      nombre: "",
+      apellidos: "",
+      email: "",
+      edad: "",
+    }));
   };
 
   return (
@@ -63,12 +99,12 @@ const LoginCardComponent = () => {
         <div className="row d-flex justify-content-center align-items-center h-100">
           <div className="col-xl-10">
             <div className="card rounded-3 text-black">
-              <div className={`row g-0 ${isRegister ? 'row-register' : ''}`}>
+              <div className={`row g-0 ${formData.isRegister ? 'row-register' : ''}`}>
                 
                 {/* LEFT SIDE */}
-                <div className={`col-lg-6 transition-page ${isRegister ? 'd-flex align-items-center left-section-register' : ''}`}>
-                  <div className={`content-transition ${isRegister ? 'text-white px-3 py-4 p-md-5 mx-md-4 w-100' : 'card-body p-md-5 mx-md-4'}`}>
-                    {!isRegister ? (
+                <div className={`col-lg-6 transition-page ${formData.isRegister ? 'd-flex align-items-center left-section-register' : ''}`}>
+                  <div className={`content-transition ${formData.isRegister ? 'text-white px-3 py-4 p-md-5 mx-md-4 w-100' : 'card-body p-md-5 mx-md-4'}`}>
+                    {!formData.isRegister ? (
                       <>
                         <div className="text-center">
                           <img
@@ -82,14 +118,18 @@ const LoginCardComponent = () => {
                         <form onSubmit={handleLogin}>
                           <p>Please login to your account</p>
 
+                          {error && <div className="alert alert-danger">{error}</div>}
+                          {success && <div className="alert alert-success">{success}</div>}
+
                           <div className="form-outline mb-4">
                             <input
                               type="email"
                               id="form2Example11"
                               className="form-control"
                               data-mdb-input-init
-                              value={username}
-                              onChange={handleUsernameChange}
+                              value={formData.username}
+                              onChange={(e) => handleInputChange("username", e.target.value)}
+                              required
                             />
                             <label className="form-label" htmlFor="form2Example11">
                               Username
@@ -102,8 +142,9 @@ const LoginCardComponent = () => {
                               id="form2Example22"
                               className="form-control"
                               data-mdb-input-init
-                              value={password}
-                              onChange={handlePasswordChange}
+                              value={formData.password}
+                              onChange={(e) => handleInputChange("password", e.target.value)}
+                              required
                             />
                             <label className="form-label" htmlFor="form2Example22">
                               Password
@@ -116,8 +157,9 @@ const LoginCardComponent = () => {
                               data-mdb-ripple-init
                               className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-3"
                               type="submit"
+                              disabled={loading}
                             >
-                              Log in
+                              {loading ? "Cargando..." : "Log in"}
                             </button>
                             <a className="text-muted" href="#!">
                               Forgot password?
@@ -152,9 +194,9 @@ const LoginCardComponent = () => {
                 </div>
 
                 {/* RIGHT SIDE */}
-                <div className={`col-lg-6 transition-page d-flex align-items-center ${isRegister ? '' : 'gradient-custom-2'}`}>
+                <div className={`col-lg-6 transition-page d-flex align-items-center ${formData.isRegister ? '' : 'gradient-custom-2'}`}>
                   <div className="content-transition w-100">
-                    {!isRegister ? (
+                    {!formData.isRegister ? (
                       <div className="quote-section">
                         <p className="quote-main">
                           "Las personas libres jamás podrán concebir lo que los libros significan para quienes vivimos encerrados."
@@ -174,6 +216,10 @@ const LoginCardComponent = () => {
                           <h5 className="mt-2 mb-3 pb-0 title-rounded text-black title-register">LIBROPIA</h5>
                         </div>
                         <h6 className="mb-3 text-black subtitle-register">Crear cuenta</h6>
+
+                        {error && <div className="alert alert-danger">{error}</div>}
+                        {success && <div className="alert alert-success">{success}</div>}
+
                         <form onSubmit={handleRegister}>
                           <div className="form-outline mb-2">
                             <input
@@ -181,8 +227,9 @@ const LoginCardComponent = () => {
                               id="nombre"
                               className="form-control input-register"
                               data-mdb-input-init
-                              value={nombre}
-                              onChange={handleNombreChange}
+                              value={formData.nombre}
+                              onChange={(e) => handleInputChange("nombre", e.target.value)}
+                              required
                             />
                             <label className="form-label label-register" htmlFor="nombre">
                               Nombre
@@ -195,8 +242,9 @@ const LoginCardComponent = () => {
                               id="apellidos"
                               className="form-control input-register"
                               data-mdb-input-init
-                              value={apellidos}
-                              onChange={handleApellidosChange}
+                              value={formData.apellidos}
+                              onChange={(e) => handleInputChange("apellidos", e.target.value)}
+                              required
                             />
                             <label className="form-label label-register" htmlFor="apellidos">
                               Apellidos
@@ -209,8 +257,9 @@ const LoginCardComponent = () => {
                               id="email"
                               className="form-control input-register"
                               data-mdb-input-init
-                              value={email}
-                              onChange={handleEmailChange}
+                              value={formData.email}
+                              onChange={(e) => handleInputChange("email", e.target.value)}
+                              required
                             />
                             <label className="form-label label-register" htmlFor="email">
                               Email
@@ -223,8 +272,8 @@ const LoginCardComponent = () => {
                               id="edad"
                               className="form-control input-register"
                               data-mdb-input-init
-                              value={edad}
-                              onChange={handleEdadChange}
+                              value={formData.edad}
+                              onChange={(e) => handleInputChange("edad", e.target.value)}
                             />
                             <label className="form-label label-register" htmlFor="edad">
                               Edad
@@ -237,8 +286,9 @@ const LoginCardComponent = () => {
                               data-mdb-ripple-init
                               className="btn btn-primary btn-block fa-lg gradient-custom-2 mb-2 btn-register-submit"
                               type="submit"
+                              disabled={loading}
                             >
-                              Registrarse
+                              {loading ? "Registrando..." : "Registrarse"}
                             </button>
                           </div>
 
