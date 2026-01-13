@@ -11,6 +11,8 @@ const LoginCardComponent = () => {
     apellidos: "",
     email: "",
     edad: "",
+    passwordRegister: "",
+    confirmPassword: "",
     isRegister: false,
   });
 
@@ -38,7 +40,11 @@ const LoginCardComponent = () => {
       });
       console.log("Login exitoso:", data.userData);
       
-      navigate("/dashboard");
+      setSuccess("Inicio de sesión exitoso");
+      
+      setTimeout(() => {
+        navigate("/dashboard");
+      }, 1500);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -52,12 +58,19 @@ const LoginCardComponent = () => {
     setError("");
     setSuccess("");
 
+    // Validar que las contraseñas coincidan
+    if (formData.passwordRegister !== formData.confirmPassword) {
+      setError("Las contraseñas no coinciden");
+      setLoading(false);
+      return;
+    }
+
     try {
       await signup({
         name: formData.nombre,
         lastName: formData.apellidos,
         email: formData.email,
-        password: formData.password,
+        password: formData.passwordRegister,
       });
       
       setSuccess("Registro exitoso. Por favor, inicia sesión");
@@ -67,9 +80,11 @@ const LoginCardComponent = () => {
         nombre: "",
         apellidos: "",
         email: "",
-        password: "",
+        passwordRegister: "",
+        confirmPassword: "",
         isRegister: false,
         username: "",
+        password: "",
       }));
     } catch (err) {
       setError(err.message);
@@ -80,10 +95,14 @@ const LoginCardComponent = () => {
 
   const handleCreateNew = () => {
     handleInputChange("isRegister", true);
+    setError("");
+    setSuccess("");
   };
 
   const handleBackToLogin = () => {
     handleInputChange("isRegister", false);
+    setError("");
+    setSuccess("");
     setFormData(prevData => ({
       ...prevData,
       nombre: "",
@@ -118,8 +137,8 @@ const LoginCardComponent = () => {
                         <form onSubmit={handleLogin}>
                           <p>Please login to your account</p>
 
-                          {error && <div className="alert alert-danger">{error}</div>}
-                          {success && <div className="alert alert-success">{success}</div>}
+                          {error && <div className="message-register alert-danger">{error}</div>}
+                          {success && <div className="message-register alert-success">{success}</div>}
 
                           <div className="form-outline mb-4">
                             <input
@@ -217,8 +236,8 @@ const LoginCardComponent = () => {
                         </div>
                         <h6 className="mb-3 text-black subtitle-register">Crear cuenta</h6>
 
-                        {error && <div className="alert alert-danger">{error}</div>}
-                        {success && <div className="alert alert-success">{success}</div>}
+                        {error && <div className="message-register alert-danger">{error}</div>}
+                        {success && <div className="message-register alert-success">{success}</div>}
 
                         <form onSubmit={handleRegister}>
                           <div className="form-outline mb-2">
@@ -268,15 +287,31 @@ const LoginCardComponent = () => {
 
                           <div className="form-outline mb-2">
                             <input
-                              type="number"
-                              id="edad"
+                              type="password"
+                              id="passwordRegister"
                               className="form-control input-register"
                               data-mdb-input-init
-                              value={formData.edad}
-                              onChange={(e) => handleInputChange("edad", e.target.value)}
+                              value={formData.passwordRegister}
+                              onChange={(e) => handleInputChange("passwordRegister", e.target.value)}
+                              required
                             />
-                            <label className="form-label label-register" htmlFor="edad">
-                              Edad
+                            <label className="form-label label-register" htmlFor="passwordRegister">
+                              Contraseña
+                            </label>
+                          </div>
+
+                          <div className="form-outline mb-2">
+                            <input
+                              type="password"
+                              id="confirmPassword"
+                              className="form-control input-register"
+                              data-mdb-input-init
+                              value={formData.confirmPassword}
+                              onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                              required
+                            />
+                            <label className="form-label label-register" htmlFor="confirmPassword">
+                              Confirmar contraseña
                             </label>
                           </div>
 

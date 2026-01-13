@@ -187,6 +187,13 @@ a {
   margin-top: 1rem;
 }
 
+/* Alertas */
+.message-register {
+  font-size: 0.7rem !important;
+  padding: 0.5rem 0.75rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
 /* ===== TABLETS (576px a 768px) ===== */
 @media (min-width: 576px) {
   body,
