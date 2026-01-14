@@ -1,13 +1,14 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import '../../styles/header.css'
 
 const HeaderComponent = () => {
   return (
     <header className="header">
       <div className="header-container">
-        <div className="header-logo-div">
+        <Link to="/homepage" className="header-logo-div">
           <img src="/Libro_Abierto_Para_Colorear-removebg-preview.png" alt="Libropia" className="header-logo" />
-        </div>
+        </Link>
 
        
         <div className="header-search-div">
@@ -18,9 +19,9 @@ const HeaderComponent = () => {
           />
         </div>
 
-        <div className="header-profile-div">
+        <Link to="/perfil" className="header-profile-div">
           <i className="bi bi-person-circle"></i>
-        </div>
+        </Link>
       </div>
     </header>
   )

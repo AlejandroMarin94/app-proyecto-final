@@ -10,7 +10,6 @@ const MainLayout = () => {
     <Outlet />
     <FooterComponent />
     </>
-    
   )
 }
 
