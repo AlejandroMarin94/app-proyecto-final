@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signup, login } from "../../services/authService";
+import { handleLogin, handleRegister } from "../../utils/authHandlers";
 
 const LoginCardComponent = () => {
   const navigate = useNavigate();
@@ -20,6 +20,14 @@ const LoginCardComponent = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const handlers = {
+    setLoading,
+    setError,
+    setSuccess,
+    setFormData,
+    navigate,
+  };
+
   const handleInputChange = (propName, propValue) => {
     setFormData(prevData => ({
       ...prevData,
@@ -27,71 +35,9 @@ const LoginCardComponent = () => {
     }));
   };
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccess("");
+  const onHandleLogin = (e) => handleLogin(e, formData, handlers);
 
-    try {
-      const data = await login({ 
-        email: formData.username, 
-        password: formData.password 
-      });
-      console.log("Login exitoso:", data.userData);
-      
-      setSuccess("Inicio de sesión exitoso");
-      
-      setTimeout(() => {
-        navigate("/homepage");
-      }, 1500);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    setSuccess("");
-
-    // Validar que las contraseñas coincidan
-    if (formData.passwordRegister !== formData.confirmPassword) {
-      setError("Las contraseñas no coinciden");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      await signup({
-        name: formData.nombre,
-        lastName: formData.apellidos,
-        email: formData.email,
-        password: formData.passwordRegister,
-      });
-      
-      setSuccess("Registro exitoso. Por favor, inicia sesión");
-      
-      setFormData(prevData => ({
-        ...prevData,
-        nombre: "",
-        apellidos: "",
-        email: "",
-        passwordRegister: "",
-        confirmPassword: "",
-        isRegister: false,
-        username: "",
-        password: "",
-      }));
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const onHandleRegister = (e) => handleRegister(e, formData, handlers);
 
   const handleCreateNew = () => {
     handleInputChange("isRegister", true);
@@ -134,7 +80,7 @@ const LoginCardComponent = () => {
                           <h4 className="mt-1 mb-5 pb-1 title-rounded">LIBROPIA</h4>
                         </div>
 
-                        <form onSubmit={handleLogin}>
+                        <form onSubmit={onHandleLogin}>
                           <p>Please login to your account</p>
 
                           {error && <div className="message-register alert-danger">{error}</div>}
@@ -239,7 +185,7 @@ const LoginCardComponent = () => {
                         {error && <div className="message-register alert-danger">{error}</div>}
                         {success && <div className="message-register alert-success">{success}</div>}
 
-                        <form onSubmit={handleRegister}>
+                        <form onSubmit={onHandleRegister}>
                           <div className="form-outline mb-2">
                             <input
                               type="text"

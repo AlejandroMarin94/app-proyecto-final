@@ -7,6 +7,7 @@ import store from "./core/redux/store/store.js";
 import App from "./App.jsx";
 import "mdb-ui-kit/css/mdb.min.css";
 import "mdb-ui-kit";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>

@@ -1,8 +1,21 @@
 import React from 'react'
+import '../../styles/footer.css'
 
 const FooterComponent = () => {
   return (
-    <div>FooterComponent</div>
+    <footer className="footer">
+      <div className="footer-container">
+       
+        <div className="footer-copyright">
+          © 2026 Libropia
+        </div>
+
+       
+        <div className="footer-quote">
+          Un lector vive mil vidas antes de morir.
+        </div>
+      </div>
+    </footer>
   )
 }
 
