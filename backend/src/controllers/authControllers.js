@@ -44,7 +44,7 @@ const login = async (req, res) => {
 
     const user = await userModel
       .findOne({ email: email })
-      .select("name lastName age email password role isActive -_id");
+      .select("name lastName age email password role isActive");
     console.log("Usuario encontrado:", user.password);
 
     if (!user) {
@@ -79,6 +79,7 @@ const login = async (req, res) => {
     }
 
     const returnUser = {
+      _id: user._id,
       name: user.name,
       lastName: user.lastName,
       age: user.age,

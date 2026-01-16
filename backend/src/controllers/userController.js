@@ -1,3 +1,5 @@
+const userModel = require('../models/userModel');
+
 const deleteUserById = async (req, res) => {
   try {
     const { idUser } = req.params;

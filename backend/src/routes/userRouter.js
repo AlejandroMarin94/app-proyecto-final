@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { deleteUserById, editUserById, getUserById} = require('../controllers/userController');
-const verifyToken = require('../middlewares/verifyToken');
+const { verifyToken } = require('../middleware/auth');
 
 // Ruta para eliminar un usuario por su ID
 router.delete('/user/:idUser', verifyToken, deleteUserById);

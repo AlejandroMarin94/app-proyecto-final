@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { deleteUserAccount } from '../../services/userService'
 import '../../styles/header.css'
 
 const HeaderComponent = () => {
@@ -19,13 +20,32 @@ const HeaderComponent = () => {
     setIsMenuOpen(false)
   }
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
     if (window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-      // TODO: Implementar llamada a API para eliminar cuenta
-      localStorage.removeItem('userData')
-      localStorage.removeItem('token')
-      localStorage.removeItem('refreshToken')
-      navigate('/login')
+      try {
+        const userDataStr = localStorage.getItem('userData')
+        if (!userDataStr) {
+          navigate('/login')
+          return
+        }
+
+        const userObj = JSON.parse(userDataStr)
+        await deleteUserAccount(userObj._id)
+
+        localStorage.removeItem('userData')
+        localStorage.removeItem('token')
+        localStorage.removeItem('refreshToken')
+        navigate('/login')
+      } catch (err) {
+        if (err.type === 'AUTH_ERROR') {
+          localStorage.removeItem('userData')
+          localStorage.removeItem('token')
+          localStorage.removeItem('refreshToken')
+          navigate('/login')
+        } else {
+          alert('Error al eliminar cuenta: ' + (err.message || 'Intenta nuevamente'))
+        }
+      }
     }
   }
 

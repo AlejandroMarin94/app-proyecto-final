@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { getUserData, updateUserData } from '../services/userService'
 import '../styles/perfilPage.css'
 
 const PerfilPage = () => {
+  const navigate = useNavigate()
   const [userData, setUserData] = useState({
     name: '',
     lastName: '',
@@ -12,14 +15,58 @@ const PerfilPage = () => {
   })
 
   const [isEditing, setIsEditing] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  // Cargar datos del usuario desde localStorage
+  // Cargar datos del usuario desde el backend
   useEffect(() => {
-    const savedData = localStorage.getItem('userData')
-    if (savedData) {
-      setUserData(JSON.parse(savedData))
+    const loadUserData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const userDataStr = localStorage.getItem('userData')
+        console.log("userData de localStorage:", userDataStr)
+        
+        if (!userDataStr) {
+          navigate('/login')
+          return
+        }
+
+        const userObj = JSON.parse(userDataStr)
+        console.log("userObj._id:", userObj._id)
+        
+        const response = await getUserData(userObj._id)
+        console.log("respuesta del backend:", response)
+        
+        if (response && response.data) {
+          console.log("Datos recibidos:", response.data)
+          setUserData(response.data)
+          localStorage.setItem('userData', JSON.stringify(response.data))
+        } else if (response && response.status === "Success") {
+          // Fallback en caso de que los datos estén en otro campo
+          console.log("Respuesta con status Success:", response)
+          setError('No se encontraron datos de usuario')
+        } else {
+          console.log("Respuesta inesperada:", response)
+          setError('Formato de respuesta inesperado')
+        }
+      } catch (err) {
+        console.error("Error completo:", err)
+        if (err.type === 'AUTH_ERROR') {
+          console.log("Token expirado, redirigiendo a login")
+          navigate('/login')
+        } else {
+          setError(err.message || 'Error al cargar datos del usuario')
+          console.error("Error al cargar datos:", err)
+        }
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [])
+
+    loadUserData()
+  }, [navigate])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -29,10 +76,38 @@ const PerfilPage = () => {
     }))
   }
 
-  const handleSave = () => {
-    localStorage.setItem('userData', JSON.stringify(userData))
-    setIsEditing(false)
-    // Aqui es donde voy a hacer la llamada a la API para guardar los cambios en el backend
+  const handleSave = async () => {
+    try {
+      const userDataStr = localStorage.getItem('userData')
+      if (!userDataStr) {
+        navigate('/login')
+        return
+      }
+
+      const userObj = JSON.parse(userDataStr)
+      const dataToUpdate = {
+        name: userData.name,
+        lastName: userData.lastName,
+        age: userData.age
+      }
+
+      const response = await updateUserData(userObj._id, dataToUpdate)
+      
+      if (response.data) {
+        setUserData(response.data)
+        localStorage.setItem('userData', JSON.stringify(response.data))
+      }
+      
+      setIsEditing(false)
+      setError(null)
+    } catch (err) {
+      if (err.type === 'AUTH_ERROR') {
+        navigate('/login')
+      } else {
+        setError(err.message || 'Error al guardar los cambios')
+        console.error("Error al guardar:", err)
+      }
+    }
   }
 
   return (
@@ -43,11 +118,16 @@ const PerfilPage = () => {
           <button 
             className="btn-edit"
             onClick={() => setIsEditing(!isEditing)}
+            disabled={loading}
           >
             {isEditing ? 'Cancelar' : 'Editar'}
           </button>
         </div>
 
+        {loading && <div className="loading">Cargando...</div>}
+        {error && <div className="error">{error}</div>}
+
+        {!loading && (
         <div className="perfil-content">
           {isEditing ? (
             <form className="perfil-form">
@@ -145,6 +225,7 @@ const PerfilPage = () => {
             </div>
           )}
         </div>
+        )}
       </div>
     </div>
   )
