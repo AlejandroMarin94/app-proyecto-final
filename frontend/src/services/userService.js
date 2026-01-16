@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:3000/api/auth";
+const API_URL = "http://localhost:3000/api/user";
 
 /**
  * Intenta renovar el token usando el refreshToken
@@ -10,7 +10,7 @@ const refreshAccessToken = async () => {
       throw new Error("No refresh token available");
     }
 
-    const response = await fetch(`${API_URL}/updatePrincipalToken`, {
+    const response = await fetch("http://localhost:3000/api/auth/updatePrincipalToken", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -77,54 +77,57 @@ const makeRequest = async (url, options = {}) => {
   return response;
 };
 
-export const signup = async (userData) => {
+export const getUserData = async (userId) => {
   try {
-    const response = await makeRequest(`${API_URL}/signup`, {
-      method: "POST",
+    const response = await makeRequest(`${API_URL}/${userId}`, {
+      method: "GET",
+    });
+
+    if (!response.ok) {
+      throw new Error("Error al obtener datos del usuario");
+    }
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Error en getUserData:", error);
+    throw error;
+  }
+};
+
+export const updateUserData = async (userId, userData) => {
+  try {
+    const response = await makeRequest(`${API_URL}/${userId}`, {
+      method: "PUT",
       body: JSON.stringify(userData),
     });
 
-    const data = await response.json();
-
-    if (data.status === "Failed" || !response.ok) {
-      throw new Error(data.message || "Error en el registro");
+    if (!response.ok) {
+      throw new Error("Error al actualizar datos del usuario");
     }
 
+    const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error en signup:", error);
+    console.error("Error en updateUserData:", error);
     throw error;
   }
 };
 
-export const login = async (credentials) => {
+export const deleteUserAccount = async (userId) => {
   try {
-    const response = await makeRequest(`${API_URL}/login`, {
-      method: "POST",
-      body: JSON.stringify(credentials),
+    const response = await makeRequest(`${API_URL}/${userId}`, {
+      method: "DELETE",
     });
 
+    if (!response.ok) {
+      throw new Error("Error al eliminar cuenta");
+    }
+
     const data = await response.json();
-
-    if (data.status === "Failed" || !response.ok) {
-      throw new Error(data.message || "Error en el login");
-    }
-
-    if (data.userData) {
-      localStorage.setItem("userData", JSON.stringify(data.userData));
-    }
-    if (data.token) {
-      localStorage.setItem("token", data.token);
-    }
-    if (data.refreshToken) {
-      localStorage.setItem("refreshToken", data.refreshToken);
-    }
-
     return data;
   } catch (error) {
-    console.error("Error en login:", error);
+    console.error("Error en deleteUserAccount:", error);
     throw error;
   }
 };
-
-

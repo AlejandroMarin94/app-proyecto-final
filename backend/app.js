@@ -4,6 +4,7 @@ const cors = require ("cors");
 
 const connectToDatabase = require ('./src/db/database');
 const authRouters = require ('./src/routes/authRouters');
+const userRouter = require ('./src/routes/userRouter');
 
 const PORT = Number(process.env.PORT || 3000);
 
@@ -18,11 +19,12 @@ server.use (
   cors({
     origin: ["http://localhost:5173", "http://localhost:5174"],
     methods: ["GET", "POST", "OPTIONS", "PATCH", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type"],
+    allowedHeaders: ["Content-Type", "auth-token"],
   })
 )
 
 server.use("/api/auth", authRouters);
+server.use("/api", userRouter);
 
 server.listen(PORT, ()=>{
   console.log(`servidor corriendo en http://localhost:${PORT}`);

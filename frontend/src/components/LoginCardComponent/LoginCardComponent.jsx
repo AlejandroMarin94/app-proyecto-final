@@ -73,7 +73,7 @@ const LoginCardComponent = () => {
                       <>
                         <div className="text-center">
                           <img
-                            src="/Libro Abierto Para Colorear.jpeg"
+                            src="/Libro_Abierto_Para_Colorear-removebg-preview.png"
                             className="logo-login"
                             alt="logo"
                           />
@@ -174,7 +174,7 @@ const LoginCardComponent = () => {
                       <div className="px-2 py-3 p-md-3 mx-md-2 w-100">
                         <div className="text-center">
                           <img
-                            src="/Libro Abierto Para Colorear.jpeg"
+                            src="/Libro_Abierto_Para_Colorear-removebg-preview.png"
                             className="logo-register"
                             alt="logo"
                           />
