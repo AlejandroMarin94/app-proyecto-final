@@ -5,6 +5,7 @@ const cors = require ("cors");
 const connectToDatabase = require ('./src/db/database');
 const authRouters = require ('./src/routes/authRouters');
 const userRouter = require ('./src/routes/userRouter');
+const bookRoutes = require ('./src/routes/bookRoutes');
 
 const PORT = Number(process.env.PORT || 3000);
 
@@ -25,6 +26,7 @@ server.use (
 
 server.use("/api/auth", authRouters);
 server.use("/api", userRouter);
+server.use("/api/books", bookRoutes);
 
 server.listen(PORT, ()=>{
   console.log(`servidor corriendo en http://localhost:${PORT}`);

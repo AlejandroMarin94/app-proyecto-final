@@ -4,10 +4,19 @@ import { deleteUserAccount } from '../../services/userService'
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 import '../../styles/header.css'
 
-const HeaderComponent = () => {
+const HeaderComponent = ({ onSearch }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
+
+  const handleSearch = (e) => {
+    e.preventDefault()
+    if (searchQuery.trim()) {
+      onSearch(searchQuery)
+      setSearchQuery('')
+    }
+  }
 
   const handleProfileClick = () => {
     navigate('/perfil')
@@ -72,6 +81,14 @@ const HeaderComponent = () => {
             type="text" 
             placeholder="Buscar libros..." 
             className="header-search-input"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyPress={(e) => {
+              if (e.key === 'Enter' && searchQuery.trim()) {
+                onSearch(searchQuery)
+                setSearchQuery('')
+              }
+            }}
           />
         </div>
 
