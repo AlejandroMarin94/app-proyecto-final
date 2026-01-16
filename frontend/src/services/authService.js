@@ -1,13 +1,11 @@
-const API_URL = "http://localhost:3000/api/auth";
+import apiClient from './apiClient'
 
+const API_URL = "http://localhost:3000/api/auth";
 
 export const signup = async (userData) => {
   try {
-    const response = await fetch(`${API_URL}/signup`, {
+    const response = await apiClient(`${API_URL}/signup`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(userData),
     });
 
@@ -25,14 +23,10 @@ export const signup = async (userData) => {
   }
 };
 
-
 export const login = async (credentials) => {
   try {
-    const response = await fetch(`${API_URL}/login`, {
+    const response = await apiClient(`${API_URL}/login`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
       body: JSON.stringify(credentials),
     });
 

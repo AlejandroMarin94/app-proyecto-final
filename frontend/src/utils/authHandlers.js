@@ -21,14 +21,20 @@ export const handleLogin = async (e, formData, handlers) => {
       navigate("/homepage");
     }, 1500);
   } catch (err) {
-    setError(err.message);
+    // Si es error de autenticación, redirigir al login
+    if (err.type === "AUTH_ERROR") {
+      navigate("/login");
+      setError("Tu sesión ha expirado. Por favor inicia sesión de nuevo.");
+    } else {
+      setError(err.message);
+    }
   } finally {
     setLoading(false);
   }
 };
 
 export const handleRegister = async (e, formData, handlers) => {
-  const { setFormData, setLoading, setError, setSuccess } = handlers;
+  const { setFormData, setLoading, setError, setSuccess, navigate } = handlers;
 
   e.preventDefault();
   setLoading(true);
@@ -64,7 +70,13 @@ export const handleRegister = async (e, formData, handlers) => {
       password: "",
     }));
   } catch (err) {
-    setError(err.message);
+    // Si es error de autenticación, redirigir al login
+    if (err.type === "AUTH_ERROR") {
+      navigate("/login");
+      setError("Tu sesión ha expirado. Por favor inicia sesión de nuevo.");
+    } else {
+      setError(err.message);
+    }
   } finally {
     setLoading(false);
   }
