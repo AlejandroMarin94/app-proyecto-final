@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { deleteUserAccount } from '../../services/userService'
+import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 import '../../styles/header.css'
 
 const HeaderComponent = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const navigate = useNavigate()
 
   const handleProfileClick = () => {
@@ -20,33 +22,41 @@ const HeaderComponent = () => {
     setIsMenuOpen(false)
   }
 
-  const handleDeleteAccount = async () => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
-      try {
-        const userDataStr = localStorage.getItem('userData')
-        if (!userDataStr) {
-          navigate('/login')
-          return
-        }
+  const handleDeleteAccount = () => {
+    setShowConfirmDelete(true)
+    setIsMenuOpen(false)
+  }
 
-        const userObj = JSON.parse(userDataStr)
-        await deleteUserAccount(userObj._id)
+  const handleConfirmDelete = async () => {
+    try {
+      const userDataStr = localStorage.getItem('userData')
+      if (!userDataStr) {
+        navigate('/login')
+        return
+      }
 
+      const userObj = JSON.parse(userDataStr)
+      await deleteUserAccount(userObj._id)
+
+      localStorage.removeItem('userData')
+      localStorage.removeItem('token')
+      localStorage.removeItem('refreshToken')
+      navigate('/login')
+    } catch (err) {
+      if (err.type === 'AUTH_ERROR') {
         localStorage.removeItem('userData')
         localStorage.removeItem('token')
         localStorage.removeItem('refreshToken')
         navigate('/login')
-      } catch (err) {
-        if (err.type === 'AUTH_ERROR') {
-          localStorage.removeItem('userData')
-          localStorage.removeItem('token')
-          localStorage.removeItem('refreshToken')
-          navigate('/login')
-        } else {
-          alert('Error al eliminar cuenta: ' + (err.message || 'Intenta nuevamente'))
-        }
+      } else {
+        alert('Error al eliminar cuenta: ' + (err.message || 'Intenta nuevamente'))
+        setShowConfirmDelete(false)
       }
     }
+  }
+
+  const handleCancelDelete = () => {
+    setShowConfirmDelete(false)
   }
 
   return (
@@ -93,6 +103,17 @@ const HeaderComponent = () => {
           </div>
         </div>
       </div>
+
+      <ConfirmDialog
+        isOpen={showConfirmDelete}
+        title="Eliminar Cuenta"
+        message="¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer."
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+        confirmText="Eliminar"
+        cancelText="Cancelar"
+        isDanger={true}
+      />
     </header>
   )
 }
