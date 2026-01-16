@@ -85,13 +85,56 @@ const login = async (req, res) => {
       role: user.role,
       isActive: user.isActive,
     };
-    res.status(200).send({ status: "Success", userData: returnUser });
+
+    const payload = {
+      _id: user._id,
+      name: user.name,
+      role: user.role,
+    }
+
+    const token = generateToken(payload, false);
+    const refreshToken = generateToken(payload, true);
+    res.status(200).send({ status: "Success", userData: returnUser, token, refreshToken });
   } catch (error) {
     res.status(500).send({ status: "Failed", error: error.message });
+  }
+};
+
+const loginWithToken = async (req, res) => {
+  try {
+    const idUser = req.payload._id;
+    const user = await userModel
+      .findById(idUser)
+      .select('name lastName email role -_id');
+    if (!user)
+      return res
+        .status(401)
+        .send({ status: 'Failed', message: 'No se ha encontrado ese usuario' });
+    res.status(200).send({ status: 'Success', data: user });
+  } catch (error) {
+    res.status(500).send({ status: 'Failed', error: error.message });
+  }
+};
+
+const updatePrincipalToken = (req, res) => {
+  try {
+    const payload = {
+      _id: req.payload._id,
+      name: req.payload.name,
+      role: req.payload.role,
+    };
+
+    const token = generateToken(payload, false);
+   
+    res.status(200).send({ status: 'Success', token });
+  } catch (error) {
+    res.status(500).send({ status: 'Failed', error: error.message });
   }
 };
 
 module.exports = {
   signup,
   login,
+  loginWithToken,
+  updatePrincipalToken,
 };
