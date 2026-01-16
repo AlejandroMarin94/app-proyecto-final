@@ -13,7 +13,8 @@ export const signup = async (userData) => {
 
     const data = await response.json();
 
-    if (!response.ok) {
+    // Verificar si el backend devolvió un error (status: "Failed")
+    if (data.status === "Failed" || !response.ok) {
       throw new Error(data.message || "Error en el registro");
     }
 
@@ -37,13 +38,20 @@ export const login = async (credentials) => {
 
     const data = await response.json();
 
-    if (!response.ok) {
+    // Verificar si el backend devolvió un error (status: "Failed")
+    if (data.status === "Failed" || !response.ok) {
       throw new Error(data.message || "Error en el login");
     }
 
-    // Guardar userData en localStorage
+    // Guardar userData, token y refreshToken en localStorage
     if (data.userData) {
       localStorage.setItem("userData", JSON.stringify(data.userData));
+    }
+    if (data.token) {
+      localStorage.setItem("token", data.token);
+    }
+    if (data.refreshToken) {
+      localStorage.setItem("refreshToken", data.refreshToken);
     }
 
     return data;

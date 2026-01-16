@@ -11,6 +11,24 @@ const HeaderComponent = () => {
     setIsMenuOpen(false)
   }
 
+  const handleLogout = () => {
+    localStorage.removeItem('userData')
+    localStorage.removeItem('token')
+    localStorage.removeItem('refreshToken')
+    navigate('/login')
+    setIsMenuOpen(false)
+  }
+
+  const handleDeleteAccount = () => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.')) {
+      // TODO: Implementar llamada a API para eliminar cuenta
+      localStorage.removeItem('userData')
+      localStorage.removeItem('token')
+      localStorage.removeItem('refreshToken')
+      navigate('/login')
+    }
+  }
+
   return (
     <header className="header">
       <div className="header-container" onClick={() => setIsMenuOpen(false)}>
@@ -44,11 +62,11 @@ const HeaderComponent = () => {
               <i className="bi bi-person"></i>
               Mi Perfil
             </button>
-            <button className="dropdown-item">
+            <button className="dropdown-item" onClick={handleLogout}>
               <i className="bi bi-box-arrow-right"></i>
               Cerrar Sesión
             </button>
-            <button className="dropdown-item dropdown-item-danger">
+            <button className="dropdown-item dropdown-item-danger" onClick={handleDeleteAccount}>
               <i className="bi bi-trash"></i>
               Eliminar Cuenta
             </button>
