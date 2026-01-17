@@ -451,6 +451,22 @@ a {
     max-width: 50% !important;
   }
 
+  .row.g-0 {
+    height: 731px !important;
+  }
+
+  .row.d-flex.justify-content-center.align-items-center.h-100 {
+    height: 731px !important;
+  }
+
+  .col-xl-10 {
+    height: 731px !important;
+  }
+
+  .card.rounded-3.text-black {
+    height: 731px !important;
+  }
+
   .row-register {
     height: 731px !important;
   }
@@ -543,4 +559,17 @@ a {
     margin-left: 1rem !important;
     margin-right: 1rem !important;
   }
+}
+
+/* ===== PASSWORD INPUT STYLES ===== */
+.password-input-container {
+  position: relative;
+}
+
+.password-toggle-icon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
 }

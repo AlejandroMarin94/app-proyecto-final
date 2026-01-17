@@ -19,6 +19,9 @@ const LoginCardComponent = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordRegister, setShowPasswordRegister] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handlers = {
     setLoading,
@@ -81,39 +84,38 @@ const LoginCardComponent = () => {
                         </div>
 
                         <form onSubmit={onHandleLogin}>
-                          <p>Please login to your account</p>
 
                           {error && <div className="message-register alert-danger">{error}</div>}
                           {success && <div className="message-register alert-success">{success}</div>}
 
-                          <div className="form-outline mb-4">
+                          <div className="mb-4">
                             <input
                               type="email"
                               id="form2Example11"
                               className="form-control"
+                              placeholder="Usuario"
                               data-mdb-input-init
                               value={formData.username}
                               onChange={(e) => handleInputChange("username", e.target.value)}
                               required
                             />
-                            <label className="form-label" htmlFor="form2Example11">
-                              Username
-                            </label>
                           </div>
 
-                          <div className="form-outline mb-4">
+                          <div className="mb-4 password-input-container">
                             <input
-                              type="password"
+                              type={showPassword ? "text" : "password"}
                               id="form2Example22"
                               className="form-control"
+                              placeholder="Contraseña"
                               data-mdb-input-init
                               value={formData.password}
                               onChange={(e) => handleInputChange("password", e.target.value)}
                               required
                             />
-                            <label className="form-label" htmlFor="form2Example22">
-                              Password
-                            </label>
+                            <i 
+                              className={`bi ${showPassword ? 'bi-eye-slash' : 'bi-eye'} password-toggle-icon`}
+                              onClick={() => setShowPassword(!showPassword)}
+                            ></i>
                           </div>
 
                           <div className="text-center pt-1 mb-5 pb-1">
@@ -124,15 +126,12 @@ const LoginCardComponent = () => {
                               type="submit"
                               disabled={loading}
                             >
-                              {loading ? "Cargando..." : "Log in"}
+                              {loading ? "Cargando..." : "Iniciar sesión"}
                             </button>
-                            <a className="text-muted" href="#!">
-                              Forgot password?
-                            </a>
                           </div>
 
                           <div className="d-flex align-items-center justify-content-center pb-4">
-                            <p className="mb-0 me-2">Don't have an account?</p>
+                            <p className="mb-0 me-2">¿Aún no tienes cuenta?</p>
                             <button
                               type="button"
                               data-mdb-button-init
@@ -140,7 +139,7 @@ const LoginCardComponent = () => {
                               className="btn btn-outline-gradient"
                               onClick={handleCreateNew}
                             >
-                              Create new
+                              Registrate
                             </button>
                           </div>
                         </form>
@@ -180,85 +179,82 @@ const LoginCardComponent = () => {
                           />
                           <h5 className="mt-2 mb-3 pb-0 title-rounded text-black title-register">LIBROPIA</h5>
                         </div>
-                        <h6 className="mb-3 text-black subtitle-register">Crear cuenta</h6>
 
                         {error && <div className="message-register alert-danger">{error}</div>}
                         {success && <div className="message-register alert-success">{success}</div>}
 
                         <form onSubmit={onHandleRegister}>
-                          <div className="form-outline mb-2">
+                          <div className="mb-2">
                             <input
                               type="text"
                               id="nombre"
                               className="form-control input-register"
+                              placeholder="Nombre"
                               data-mdb-input-init
                               value={formData.nombre}
                               onChange={(e) => handleInputChange("nombre", e.target.value)}
                               required
                             />
-                            <label className="form-label label-register" htmlFor="nombre">
-                              Nombre
-                            </label>
                           </div>
 
-                          <div className="form-outline mb-2">
+                          <div className="mb-2">
                             <input
                               type="text"
                               id="apellidos"
                               className="form-control input-register"
+                              placeholder="Apellidos"
                               data-mdb-input-init
                               value={formData.apellidos}
                               onChange={(e) => handleInputChange("apellidos", e.target.value)}
                               required
                             />
-                            <label className="form-label label-register" htmlFor="apellidos">
-                              Apellidos
-                            </label>
                           </div>
 
-                          <div className="form-outline mb-2">
+                          <div className="mb-2">
                             <input
                               type="email"
                               id="email"
                               className="form-control input-register"
+                              placeholder="Email"
                               data-mdb-input-init
                               value={formData.email}
                               onChange={(e) => handleInputChange("email", e.target.value)}
                               required
                             />
-                            <label className="form-label label-register" htmlFor="email">
-                              Email
-                            </label>
                           </div>
 
-                          <div className="form-outline mb-2">
+                          <div className="mb-2 password-input-container">
                             <input
-                              type="password"
+                              type={showPasswordRegister ? "text" : "password"}
                               id="passwordRegister"
                               className="form-control input-register"
+                              placeholder="Contraseña"
                               data-mdb-input-init
                               value={formData.passwordRegister}
                               onChange={(e) => handleInputChange("passwordRegister", e.target.value)}
                               required
                             />
-                            <label className="form-label label-register" htmlFor="passwordRegister">
-                              Contraseña
-                            </label>
+                            <i 
+                              className={`bi ${showPasswordRegister ? 'bi-eye-slash' : 'bi-eye'} password-toggle-icon`}
+                              onClick={() => setShowPasswordRegister(!showPasswordRegister)}
+                            ></i>
                           </div>
 
-                          <div className="form-outline mb-2">
+                          <div className="mb-2 password-input-container">
                             <input
-                              type="password"
+                              type={showConfirmPassword ? "text" : "password"}
                               id="confirmPassword"
                               className="form-control input-register"
+                              placeholder="Confirmar contraseña"
                               data-mdb-input-init
                               value={formData.confirmPassword}
                               onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
                               required
                             />
-                            <label className="form-label label-register" htmlFor="confirmPassword">
-                              Confirmar contraseña
-                            </label>
+                            <i 
+                              className={`bi ${showConfirmPassword ? 'bi-eye-slash' : 'bi-eye'} password-toggle-icon`}
+                              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            ></i>
                           </div>
 
                           <div className="text-center pt-1 mb-2 pb-1">
