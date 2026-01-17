@@ -264,6 +264,31 @@ const HomePage = () => {
       <div className="section-libros">
         <h2 onClick={() => setCurrentSection('libros')} className="clickable-title">Libros</h2>
         <div className="libros">
+          {Object.values(userBooks)
+            .filter(item => item.status === 'Currently reading')
+            .length > 0 ? (
+            Object.values(userBooks)
+              .filter(item => item.status === 'Currently reading')
+              .map((item, idx) => (
+                <div key={idx} className="book-card">
+                  <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
+                  <div className="book-info">
+                    <h3>{item.book.titulo}</h3>
+                    <p className="author">{item.book.autor}</p>
+                    <p className="year"><i className="bi bi-calendar"></i> {item.book.fechaPublicacion}</p>
+                    <div className="rating">
+                      <span><i className="bi bi-star-fill"></i> {item.book.rating}</span>
+                      <i 
+                        className={`bi ${favoriteBooks[item.book.id || item.book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                        onClick={() => toggleFavorite(item.book)}
+                      ></i>
+                    </div>
+                  </div>
+                </div>
+              ))
+          ) : (
+            <p>No hay libros siendo leídos actualmente</p>
+          )}
         </div>
       </div>
 
