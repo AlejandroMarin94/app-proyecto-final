@@ -13,6 +13,7 @@ const HomePage = () => {
   const [error, setError] = useState(null)
   const [errorSearch, setErrorSearch] = useState(null)
   const [openDropdown, setOpenDropdown] = useState(null)
+  const [selectedStatus, setSelectedStatus] = useState({})
 
   // Cargar todos los libros de la BD al montar
   useEffect(() => {
@@ -62,6 +63,14 @@ const HomePage = () => {
     setOpenDropdown(openDropdown === key ? null : key)
   }
 
+  const handleSelectStatus = (status, index, section) => {
+    const key = `${section}-${index}`
+    setSelectedStatus({
+      ...selectedStatus,
+      [key]: status
+    })
+  }
+
   const handleBookStatus = (status) => {
     console.log(`Libro marcado como: ${status}`)
     setOpenDropdown(null)
@@ -102,15 +111,15 @@ const HomePage = () => {
                               </button>
                             </div>
                             <label>
-                              <input type="radio" name={`status-search-${index}`} onChange={() => handleBookStatus('Want to read')} />
+                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Want to read'} onChange={() => handleSelectStatus('Want to read', index, 'search')} />
                               Want to read
                             </label>
                             <label>
-                              <input type="radio" name={`status-search-${index}`} onChange={() => handleBookStatus('Currently reading')} />
+                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Currently reading'} onChange={() => handleSelectStatus('Currently reading', index, 'search')} />
                               Currently reading
                             </label>
                             <label>
-                              <input type="radio" name={`status-search-${index}`} onChange={() => handleBookStatus('Read')} />
+                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Read'} onChange={() => handleSelectStatus('Read', index, 'search')} />
                               Read
                             </label>
                           </div>
@@ -158,15 +167,15 @@ const HomePage = () => {
                               </button>
                             </div>
                             <label>
-                              <input type="radio" name={`status-all-${index}`} onChange={() => handleBookStatus('Want to read')} />
+                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Want to read'} onChange={() => handleSelectStatus('Want to read', index, 'all')} />
                               Want to read
                             </label>
                             <label>
-                              <input type="radio" name={`status-all-${index}`} onChange={() => handleBookStatus('Currently reading')} />
+                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Currently reading'} onChange={() => handleSelectStatus('Currently reading', index, 'all')} />
                               Currently reading
                             </label>
                             <label>
-                              <input type="radio" name={`status-all-${index}`} onChange={() => handleBookStatus('Read')} />
+                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Read'} onChange={() => handleSelectStatus('Read', index, 'all')} />
                               Read
                             </label>
                           </div>
