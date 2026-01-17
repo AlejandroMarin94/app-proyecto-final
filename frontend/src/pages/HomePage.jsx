@@ -293,7 +293,7 @@ const HomePage = () => {
       </div>
 
       <div className="section-libros-favoritos">
-        <h2 onClick={() => setCurrentSection('favoritos')} className="clickable-title">Libros Favoritos</h2>
+        <h2 onClick={() => setCurrentSection('favoritos')} className="clickable-title"><i className="bi bi-heart-fill" style={{color: '#e74c3c', marginRight: '8px', fontSize: '24px'}}></i>Libros Favoritos</h2>
         <div className="libros-favoritos-content">
           {Object.values(favoriteBooks).length > 0 ? (
             Object.values(favoriteBooks).map((book, idx) => (
@@ -323,55 +323,83 @@ const HomePage = () => {
 
       {currentSection === 'libros' && (
         <div className="section-libros">
-          <h2 onClick={() => setCurrentSection(null)} className="clickable-title"><i className="bi bi-arrow-left"></i> Libros</h2>
-          <div className="libros-subcategories">
-            <div className="subcategory-card">
-              <h3>Want to read</h3>
-              <div className="subcategory-content">
-                {Object.values(userBooks)
-                  .filter(item => item.status === 'Want to read')
-                  .map((item, idx) => (
-                    <div key={idx} className="user-book-item">
-                      <img src={item.book.cover} alt={item.book.titulo} className="user-book-image" />
-                      <div className="user-book-info">
-                        <h4>{item.book.titulo}</h4>
-                        <p>{item.book.autor}</p>
+          <div className="libros-header">
+            <i className="bi bi-arrow-left" onClick={() => setCurrentSection(null)} style={{cursor: 'pointer', fontSize: '24px'}}></i>
+            <h2 className="clickable-title">Libros</h2>
+          </div>
+          
+          <div className="subcategory-section">
+            <h3 className="subcategory-title">Want to read</h3>
+            <div className="libros">
+              {Object.values(userBooks)
+                .filter(item => item.status === 'Want to read')
+                .map((item, idx) => (
+                  <div key={idx} className="book-card">
+                    <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
+                    <div className="book-info">
+                      <h3>{item.book.titulo}</h3>
+                      <p className="author">{item.book.autor}</p>
+                      <p className="year"><i className="bi bi-calendar"></i> {item.book.fechaPublicacion}</p>
+                      <div className="rating">
+                        <span><i className="bi bi-star-fill"></i> {item.book.rating}</span>
+                        <i 
+                          className={`bi ${favoriteBooks[item.book.id || item.book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(item.book)}
+                        ></i>
                       </div>
                     </div>
-                  ))}
-              </div>
+                  </div>
+                ))}
             </div>
-            <div className="subcategory-card">
-              <h3>Currently reading</h3>
-              <div className="subcategory-content">
-                {Object.values(userBooks)
-                  .filter(item => item.status === 'Currently reading')
-                  .map((item, idx) => (
-                    <div key={idx} className="user-book-item">
-                      <img src={item.book.cover} alt={item.book.titulo} className="user-book-image" />
-                      <div className="user-book-info">
-                        <h4>{item.book.titulo}</h4>
-                        <p>{item.book.autor}</p>
+          </div>
+
+          <div className="subcategory-section">
+            <h3 className="subcategory-title">Currently reading</h3>
+            <div className="libros">
+              {Object.values(userBooks)
+                .filter(item => item.status === 'Currently reading')
+                .map((item, idx) => (
+                  <div key={idx} className="book-card">
+                    <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
+                    <div className="book-info">
+                      <h3>{item.book.titulo}</h3>
+                      <p className="author">{item.book.autor}</p>
+                      <p className="year"><i className="bi bi-calendar"></i> {item.book.fechaPublicacion}</p>
+                      <div className="rating">
+                        <span><i className="bi bi-star-fill"></i> {item.book.rating}</span>
+                        <i 
+                          className={`bi ${favoriteBooks[item.book.id || item.book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(item.book)}
+                        ></i>
                       </div>
                     </div>
-                  ))}
-              </div>
+                  </div>
+                ))}
             </div>
-            <div className="subcategory-card">
-              <h3>Read</h3>
-              <div className="subcategory-content">
-                {Object.values(userBooks)
-                  .filter(item => item.status === 'Read')
-                  .map((item, idx) => (
-                    <div key={idx} className="user-book-item">
-                      <img src={item.book.cover} alt={item.book.titulo} className="user-book-image" />
-                      <div className="user-book-info">
-                        <h4>{item.book.titulo}</h4>
-                        <p>{item.book.autor}</p>
+          </div>
+
+          <div className="subcategory-section">
+            <h3 className="subcategory-title">Read</h3>
+            <div className="libros">
+              {Object.values(userBooks)
+                .filter(item => item.status === 'Read')
+                .map((item, idx) => (
+                  <div key={idx} className="book-card">
+                    <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
+                    <div className="book-info">
+                      <h3>{item.book.titulo}</h3>
+                      <p className="author">{item.book.autor}</p>
+                      <p className="year"><i className="bi bi-calendar"></i> {item.book.fechaPublicacion}</p>
+                      <div className="rating">
+                        <span><i className="bi bi-star-fill"></i> {item.book.rating}</span>
+                        <i 
+                          className={`bi ${favoriteBooks[item.book.id || item.book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(item.book)}
+                        ></i>
                       </div>
                     </div>
-                  ))}
-              </div>
+                  </div>
+                ))}
             </div>
           </div>
         </div>
