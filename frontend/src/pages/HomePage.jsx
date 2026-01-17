@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import { searchNewBooks, getAllBooks } from '../services/bookService'
 import '../styles/homePage.css'
 import '../styles/bookGrid.css'
 
 const HomePage = () => {
   const { searchQuery } = useOutletContext() || {}
+  const navigate = useNavigate()
   const [allBooks, setAllBooks] = useState([])
   const [googleBooks, setGoogleBooks] = useState([])
   const [loading, setLoading] = useState(true)
@@ -24,7 +25,15 @@ const HomePage = () => {
         setAllBooks(data)
         setError(null)
       } catch (err) {
-        setError('Error al cargar libros')
+        // Manejo del error de autenticación
+        if (err.type === 'AUTH_ERROR') {
+          localStorage.removeItem('userData')
+          localStorage.removeItem('token')
+          localStorage.removeItem('refreshToken')
+          navigate('/login')
+        } else {
+          setError('Error al cargar libros')
+        }
         console.error(err)
       } finally {
         setLoading(false)
@@ -32,7 +41,7 @@ const HomePage = () => {
     }
 
     fetchAllBooks()
-  }, [])
+  }, [navigate])
 
   // Cargar libros según búsqueda
   useEffect(() => {
@@ -48,7 +57,15 @@ const HomePage = () => {
         setGoogleBooks(data)
         setErrorSearch(null)
       } catch (err) {
-        setErrorSearch('Error al cargar libros')
+        // Manejo del error de autenticación
+        if (err.type === 'AUTH_ERROR') {
+          localStorage.removeItem('userData')
+          localStorage.removeItem('token')
+          localStorage.removeItem('refreshToken')
+          navigate('/login')
+        } else {
+          setErrorSearch('Error al cargar libros')
+        }
         console.error(err)
       } finally {
         setLoadingSearch(false)
@@ -56,7 +73,7 @@ const HomePage = () => {
     }
 
     fetchBooks()
-  }, [searchQuery])
+  }, [searchQuery, navigate])
 
   const toggleDropdown = (index, section) => {
     const key = `${section}-${index}`
