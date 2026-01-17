@@ -272,11 +272,19 @@ const HomePage = () => {
         <div className="libros-favoritos-content">
           {Object.values(favoriteBooks).length > 0 ? (
             Object.values(favoriteBooks).map((book, idx) => (
-              <div key={idx} className="user-book-item">
-                <img src={book.cover} alt={book.titulo} className="user-book-image" />
-                <div className="user-book-info">
-                  <h4>{book.titulo}</h4>
-                  <p>{book.autor}</p>
+              <div key={idx} className="book-card">
+                <img src={book.cover} alt={book.titulo} className="book-image" />
+                <div className="book-info">
+                  <h3>{book.titulo}</h3>
+                  <p className="author">{book.autor}</p>
+                  <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
+                  <div className="rating">
+                    <span><i className="bi bi-star-fill"></i> {book.rating}</span>
+                    <i 
+                      className="bi bi-heart-fill heart-icon"
+                      onClick={() => toggleFavorite(book)}
+                    ></i>
+                  </div>
                 </div>
               </div>
             ))
@@ -350,11 +358,19 @@ const HomePage = () => {
           <div className="libros-favoritos-content">
             {Object.values(favoriteBooks).length > 0 ? (
               Object.values(favoriteBooks).map((book, idx) => (
-                <div key={idx} className="user-book-item">
-                  <img src={book.cover} alt={book.titulo} className="user-book-image" />
-                  <div className="user-book-info">
-                    <h4>{book.titulo}</h4>
-                    <p>{book.autor}</p>
+                <div key={idx} className="book-card">
+                  <img src={book.cover} alt={book.titulo} className="book-image" />
+                  <div className="book-info">
+                    <h3>{book.titulo}</h3>
+                    <p className="author">{book.autor}</p>
+                    <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
+                    <div className="rating">
+                      <span><i className="bi bi-star-fill"></i> {book.rating}</span>
+                      <i 
+                        className="bi bi-heart-fill heart-icon"
+                        onClick={() => toggleFavorite(book)}
+                      ></i>
+                    </div>
                   </div>
                 </div>
               ))
