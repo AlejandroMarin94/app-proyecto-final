@@ -79,6 +79,12 @@ const HomePage = () => {
                         <p className="author">{book.autor}</p>
                         <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                         <div className="rating"><i className="bi bi-star-fill"></i> {book.rating}</div>
+                        <div className="want-to-read-btn">
+                          <span>Want to read</span>
+                          <button className="dropdown-btn">
+                            <i className="bi bi-triangle-fill"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
@@ -105,6 +111,12 @@ const HomePage = () => {
                         <p className="author">{book.autor}</p>
                         <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                         <div className="rating"><i className="bi bi-star-fill"></i> {book.rating}</div>
+                        <div className="want-to-read-btn">
+                          <span>Want to read</span>
+                          <button className="dropdown-btn">
+                            <i className="bi bi-triangle-fill"></i>
+                          </button>
+                        </div>
                       </div>
                     </div>
                   ))}
