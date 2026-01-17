@@ -15,6 +15,8 @@ const HomePage = () => {
   const [errorSearch, setErrorSearch] = useState(null)
   const [openDropdown, setOpenDropdown] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState({})
+  const [currentSection, setCurrentSection] = useState(null)
+  const [userBooks, setUserBooks] = useState({})
 
   // Cargar todos los libros de la BD al montar
   useEffect(() => {
@@ -88,16 +90,26 @@ const HomePage = () => {
     })
   }
 
-  const handleBookStatus = (status) => {
-    console.log(`Libro marcado como: ${status}`)
+  const handleBookStatus = (status, index, section, book) => {
+    const key = `${section}-${index}`
+    const selectedState = selectedStatus[key]
+    if (selectedState) {
+      setUserBooks({
+        ...userBooks,
+        [book.id || book.titulo]: { book, status: selectedState }
+      })
+    }
+    console.log(`Libro marcado como: ${selectedState}`)
     setOpenDropdown(null)
   }
 
   return (
     <div className="home-page-container">
-      <div className="section-libros-google">
-        <h2>{searchQuery ? 'Resultados de Búsqueda' : 'Recomendaciones'}</h2>
-        <div className="libros-google">
+      {currentSection === null && (
+        <>
+          <div className="section-libros-google">
+            <h2>{searchQuery ? 'Resultados de Búsqueda' : 'Recomendaciones'}</h2>
+            <div className="libros-google">
           {searchQuery ? (
             <>
               {loadingSearch && <p>Cargando libros...</p>}
@@ -127,7 +139,7 @@ const HomePage = () => {
                                 <i className="bi bi-x"></i>
                               </button>
                               <span>Add to my books</span>
-                              <button className="ok-btn" onClick={() => handleBookStatus('confirmed')}>
+                              <button className="ok-btn" onClick={() => handleBookStatus('confirmed', index, 'search', book)}>
                                 <i className="bi bi-check"></i>
                               </button>
                             </div>
@@ -187,7 +199,7 @@ const HomePage = () => {
                                 <i className="bi bi-x"></i>
                               </button>
                               <span>Add to my books</span>
-                              <button className="ok-btn" onClick={() => handleBookStatus('confirmed')}>
+                              <button className="ok-btn" onClick={() => handleBookStatus('confirmed', index, 'all', book)}>
                                 <i className="bi bi-check"></i>
                               </button>
                             </div>
@@ -223,16 +235,82 @@ const HomePage = () => {
       </div>
 
       <div className="section-libros">
-        <h2>Libros</h2>
+        <h2 onClick={() => setCurrentSection('libros')} className="clickable-title">Libros</h2>
         <div className="libros">
         </div>
       </div>
 
       <div className="section-libros-favoritos">
-        <h2>Libros Favoritos</h2>
+        <h2 onClick={() => setCurrentSection('favoritos')} className="clickable-title">Libros Favoritos</h2>
         <div className="libros-favoritos-content">
         </div>
       </div>
+        </>
+      )}
+
+      {currentSection === 'libros' && (
+        <div className="section-libros">
+          <h2 onClick={() => setCurrentSection(null)} className="clickable-title"><i className="bi bi-arrow-left"></i> Libros</h2>
+          <div className="libros-subcategories">
+            <div className="subcategory-card">
+              <h3>Want to read</h3>
+              <div className="subcategory-content">
+                {Object.values(userBooks)
+                  .filter(item => item.status === 'Want to read')
+                  .map((item, idx) => (
+                    <div key={idx} className="user-book-item">
+                      <img src={item.book.cover} alt={item.book.titulo} className="user-book-image" />
+                      <div className="user-book-info">
+                        <h4>{item.book.titulo}</h4>
+                        <p>{item.book.autor}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+            <div className="subcategory-card">
+              <h3>Currently reading</h3>
+              <div className="subcategory-content">
+                {Object.values(userBooks)
+                  .filter(item => item.status === 'Currently reading')
+                  .map((item, idx) => (
+                    <div key={idx} className="user-book-item">
+                      <img src={item.book.cover} alt={item.book.titulo} className="user-book-image" />
+                      <div className="user-book-info">
+                        <h4>{item.book.titulo}</h4>
+                        <p>{item.book.autor}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+            <div className="subcategory-card">
+              <h3>Read</h3>
+              <div className="subcategory-content">
+                {Object.values(userBooks)
+                  .filter(item => item.status === 'Read')
+                  .map((item, idx) => (
+                    <div key={idx} className="user-book-item">
+                      <img src={item.book.cover} alt={item.book.titulo} className="user-book-image" />
+                      <div className="user-book-info">
+                        <h4>{item.book.titulo}</h4>
+                        <p>{item.book.autor}</p>
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {currentSection === 'favoritos' && (
+        <div className="section-libros-favoritos">
+          <h2 onClick={() => setCurrentSection(null)} className="clickable-title"><i className="bi bi-arrow-left"></i> Libros Favoritos</h2>
+          <div className="libros-favoritos-content">
+          </div>
+        </div>
+      )}
     </div>
   )
 }

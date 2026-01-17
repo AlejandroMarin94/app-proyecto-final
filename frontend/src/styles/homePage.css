@@ -14,7 +14,8 @@
   border-radius: 0.5rem;
   padding: 2rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  height: 500px;
+  min-height: 600px;
+  height: auto;
 }
 
 .section-libros h2,
@@ -23,6 +24,15 @@
   margin-bottom: 1.5rem;
   font-size: 1.5rem;
   font-weight: 600;
+}
+
+.clickable-title {
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.clickable-title:hover {
+  color: #4A90E2;
 }
 
 .libros-google,
@@ -63,6 +73,72 @@
   overflow-x: auto;
   overflow-y: hidden;
   width: 100%;
+}
+
+.libros-subcategories {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.subcategory-card {
+  background-color: #fff;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.subcategory-card h3 {
+  color: #333;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.subcategory-content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.user-book-item {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #f5f5f5;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 200px;
+  min-height: 436px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.user-book-item:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.user-book-image {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+}
+
+.user-book-info {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  flex-grow: 1;
+  justify-content: space-between;
+}
+
+.user-book-info h4 {
+  margin: 0 0 8px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.3;
 }
 
 /* Sección de Perfil */
