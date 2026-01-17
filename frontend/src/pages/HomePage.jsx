@@ -129,7 +129,10 @@ const HomePage = () => {
                             <h3>{book.titulo}</h3>
                             <p className="author">{book.autor}</p>
                             <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
-                            <div className="rating"><i className="bi bi-star-fill"></i> {book.rating}</div>
+                            <div className="rating">
+                              <span><i className="bi bi-star-fill"></i> {book.rating}</span>
+                              <i className="bi bi-heart heart-icon"></i>
+                            </div>
                           </>
                         )}
                         {openDropdown === `search-${index}` ? (
@@ -189,7 +192,10 @@ const HomePage = () => {
                             <h3>{book.titulo}</h3>
                             <p className="author">{book.autor}</p>
                             <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
-                            <div className="rating"><i className="bi bi-star-fill"></i> {book.rating}</div>
+                            <div className="rating">
+                              <span><i className="bi bi-star-fill"></i> {book.rating}</span>
+                              <i className="bi bi-heart heart-icon"></i>
+                            </div>
                           </>
                         )}
                         {openDropdown === `all-${index}` ? (

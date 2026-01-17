@@ -69,6 +69,29 @@
   font-weight: 600;
   text-align: left;
   margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.book-info .rating span {
+  color: #f39c12;
+}
+
+.book-info .rating span i {
+  color: #f39c12;
+  font-size: 13px;
+}
+
+.book-info .rating .heart-icon {
+  color: #e74c3c;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.book-info .rating .heart-icon:hover {
+  color: #c0392b;
 }
 
 .want-to-read-btn {
