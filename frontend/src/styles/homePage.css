@@ -44,35 +44,39 @@
 }
 
 .libros-google::-webkit-scrollbar,
-.libros::-webkit-scrollbar {
+.libros::-webkit-scrollbar,
+.libros-favoritos-content::-webkit-scrollbar {
   height: 10px;
 }
 
 .libros-google::-webkit-scrollbar-track,
-.libros::-webkit-scrollbar-track {
+.libros::-webkit-scrollbar-track,
+.libros-favoritos-content::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
 
 .libros-google::-webkit-scrollbar-thumb,
-.libros::-webkit-scrollbar-thumb {
+.libros::-webkit-scrollbar-thumb,
+.libros-favoritos-content::-webkit-scrollbar-thumb {
   background: #888;
   border-radius: 10px;
 }
 
 .libros-google::-webkit-scrollbar-thumb:hover,
-.libros::-webkit-scrollbar-thumb:hover {
+.libros::-webkit-scrollbar-thumb:hover,
+.libros-favoritos-content::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
 
 .libros-favoritos-content {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 1rem;
-  height: 500px;
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 20px;
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
-  width: 100%;
+  padding: 10px 0;
 }
 
 .libros-subcategories {
