@@ -18,6 +18,45 @@ const HomePage = () => {
   const [currentSection, setCurrentSection] = useState(null)
   const [userBooks, setUserBooks] = useState({})
   const [favoriteBooks, setFavoriteBooks] = useState({})
+  const [dataLoaded, setDataLoaded] = useState(false)
+
+  // Cargar favoritos y userBooks del localStorage al montar
+  useEffect(() => {
+    try {
+      const savedFavorites = localStorage.getItem('favoriteBooks')
+      const savedUserBooks = localStorage.getItem('userBooks')
+      if (savedFavorites) {
+        setFavoriteBooks(JSON.parse(savedFavorites))
+      }
+      if (savedUserBooks) {
+        setUserBooks(JSON.parse(savedUserBooks))
+      }
+      setDataLoaded(true)
+    } catch (err) {
+      console.error('Error al cargar datos del localStorage:', err)
+      setDataLoaded(true)
+    }
+  }, [])
+
+  // Guardar favoritos en localStorage
+  useEffect(() => {
+    if (!dataLoaded) return
+    try {
+      localStorage.setItem('favoriteBooks', JSON.stringify(favoriteBooks))
+    } catch (err) {
+      console.error('Error al guardar favoritos:', err)
+    }
+  }, [favoriteBooks, dataLoaded])
+
+  // Guardar userBooks en localStorage
+  useEffect(() => {
+    if (!dataLoaded) return
+    try {
+      localStorage.setItem('userBooks', JSON.stringify(userBooks))
+    } catch (err) {
+      console.error('Error al guardar userBooks:', err)
+    }
+  }, [userBooks, dataLoaded])
 
   // Cargar todos los libros de la BD al montar
   useEffect(() => {
@@ -95,9 +134,18 @@ const HomePage = () => {
     const key = `${section}-${index}`
     const selectedState = selectedStatus[key]
     if (selectedState) {
+      // Guardar solo los datos serializables del libro
+      const bookData = {
+        id: book.id,
+        titulo: book.titulo,
+        autor: book.autor,
+        fechaPublicacion: book.fechaPublicacion,
+        cover: book.cover,
+        rating: book.rating
+      }
       setUserBooks({
         ...userBooks,
-        [book.id || book.titulo]: { book, status: selectedState }
+        [book.id || book.titulo]: { book: bookData, status: selectedState }
       })
     }
     console.log(`Libro marcado como: ${selectedState}`)
@@ -111,9 +159,18 @@ const HomePage = () => {
       delete newFavorites[bookId]
       setFavoriteBooks(newFavorites)
     } else {
+      // Guardar solo los datos serializables del libro
+      const bookData = {
+        id: book.id,
+        titulo: book.titulo,
+        autor: book.autor,
+        fechaPublicacion: book.fechaPublicacion,
+        cover: book.cover,
+        rating: book.rating
+      }
       setFavoriteBooks({
         ...favoriteBooks,
-        [bookId]: book
+        [bookId]: bookData
       })
     }
   }
@@ -287,7 +344,7 @@ const HomePage = () => {
                 </div>
               ))
           ) : (
-            <p>No hay libros siendo leídos actualmente</p>
+            <p style={{textAlign: 'center', width: '100%'}}>No hay libros siendo leídos actualmente</p>
           )}
         </div>
       </div>
@@ -314,7 +371,7 @@ const HomePage = () => {
               </div>
             ))
           ) : (
-            <p>No hay libros favoritos</p>
+            <p style={{textAlign: 'center', width: '100%'}}>No hay libros favoritos</p>
           )}
         </div>
       </div>
