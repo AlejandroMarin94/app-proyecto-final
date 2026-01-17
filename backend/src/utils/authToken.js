@@ -4,11 +4,11 @@ const jwt = require('jsonwebtoken');
 const generateToken = (payload, isRefreshToken) => {
   if (isRefreshToken) {
     return jwt.sign(payload, process.env.SECRET_TOKEN_REFRESH, {
-      expiresIn: "3min",
+      expiresIn: "30min",
     });
   }
   return jwt.sign(payload, process.env.SECRET_TOKEN, {
-    expiresIn: "1min",
+    expiresIn: "120min",
   });
 };
 

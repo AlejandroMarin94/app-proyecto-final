@@ -9,6 +9,24 @@
   scrollbar-width: auto;
 }
 
+.books-grid::-webkit-scrollbar {
+  height: 10px;
+}
+
+.books-grid::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+.books-grid::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
+
+.books-grid::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 .book-card {
   display: flex;
   flex-direction: column;

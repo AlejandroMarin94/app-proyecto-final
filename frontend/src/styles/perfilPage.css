@@ -5,6 +5,9 @@
   gap: 2rem;
   padding: 2rem;
   min-height: 100vh;
+  background: linear-gradient(to right, #4A90E2, #7ED321);
+  max-width: 1280px;
+  margin: 0 auto;
 }
 
 .section-perfil {

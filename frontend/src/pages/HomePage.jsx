@@ -123,7 +123,7 @@ const HomePage = () => {
       {currentSection === null && (
         <>
           <div className="section-libros-google">
-            <h2>{searchQuery ? 'Resultados de Búsqueda' : 'Recomendaciones'}</h2>
+            <h2 style={{position: 'relative', textAlign: 'center'}}><i className="bi bi-lightbulb-fill" style={{color: '#FFD700', marginRight: '8px', fontSize: '24px'}}></i>{searchQuery ? 'Resultados de Búsqueda' : 'Recomendaciones'}</h2>
             <div className="libros-google">
           {searchQuery ? (
             <>
@@ -159,27 +159,27 @@ const HomePage = () => {
                               <button className="close-btn" onClick={() => setOpenDropdown(null)}>
                                 <i className="bi bi-x"></i>
                               </button>
-                              <span>Add to my books</span>
+                              <span>Añadir</span>
                               <button className="ok-btn" onClick={() => handleBookStatus('confirmed', index, 'search', book)}>
                                 <i className="bi bi-check"></i>
                               </button>
                             </div>
                             <label>
                               <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Want to read'} onChange={() => handleSelectStatus('Want to read', index, 'search')} />
-                              Want to read
+                              Pendiente
                             </label>
                             <label>
                               <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Currently reading'} onChange={() => handleSelectStatus('Currently reading', index, 'search')} />
-                              Currently reading
+                              Leyendo
                             </label>
                             <label>
                               <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Read'} onChange={() => handleSelectStatus('Read', index, 'search')} />
-                              Read
+                              Leído
                             </label>
                           </div>
                         ) : (
                           <button className="want-to-read-btn" onClick={() => toggleDropdown(index, 'search')}>
-                            <span>Want to read</span>
+                            <span>Añadir libro</span>
                             <i className="bi bi-triangle-fill"></i>
                           </button>
                         )}
@@ -225,27 +225,27 @@ const HomePage = () => {
                               <button className="close-btn" onClick={() => setOpenDropdown(null)}>
                                 <i className="bi bi-x"></i>
                               </button>
-                              <span>Add to my books</span>
+                              <span>Añadir</span>
                               <button className="ok-btn" onClick={() => handleBookStatus('confirmed', index, 'all', book)}>
                                 <i className="bi bi-check"></i>
                               </button>
                             </div>
                             <label>
                               <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Want to read'} onChange={() => handleSelectStatus('Want to read', index, 'all')} />
-                              Want to read
+                              Pendiente
                             </label>
                             <label>
                               <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Currently reading'} onChange={() => handleSelectStatus('Currently reading', index, 'all')} />
-                              Currently reading
+                              Leyendo
                             </label>
                             <label>
                               <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Read'} onChange={() => handleSelectStatus('Read', index, 'all')} />
-                              Read
+                              Leído
                             </label>
                           </div>
                         ) : (
                           <button className="want-to-read-btn" onClick={() => toggleDropdown(index, 'all')}>
-                            <span>Want to read</span>
+                            <span>Añadir libro</span>
                             <i className="bi bi-triangle-fill"></i>
                           </button>
                         )}
@@ -262,7 +262,7 @@ const HomePage = () => {
       </div>
 
       <div className="section-libros">
-        <h2 onClick={() => setCurrentSection('libros')} className="clickable-title">Libros</h2>
+        <h2 onClick={() => setCurrentSection('libros')} className="clickable-title" style={{position: 'relative', textAlign: 'center'}}><i className="bi bi-book-half" style={{color: '#000000', marginRight: '8px', fontSize: '24px'}}></i>Mi biblioteca<i className="bi bi-arrow-right" style={{color: '#333', fontSize: '32px', position: 'absolute', right: '0'}}></i></h2>
         <div className="libros">
           {Object.values(userBooks)
             .filter(item => item.status === 'Currently reading')
@@ -293,7 +293,7 @@ const HomePage = () => {
       </div>
 
       <div className="section-libros-favoritos">
-        <h2 onClick={() => setCurrentSection('favoritos')} className="clickable-title"><i className="bi bi-heart-fill" style={{color: '#e74c3c', marginRight: '8px', fontSize: '24px'}}></i>Libros Favoritos</h2>
+        <h2 className="clickable-title" style={{textAlign: 'center', cursor: 'default'}}><i className="bi bi-heart-fill" style={{color: '#e74c3c', marginRight: '8px', fontSize: '24px'}}></i>Libros Favoritos</h2>
         <div className="libros-favoritos-content">
           {Object.values(favoriteBooks).length > 0 ? (
             Object.values(favoriteBooks).map((book, idx) => (
@@ -324,12 +324,11 @@ const HomePage = () => {
       {currentSection === 'libros' && (
         <div className="section-libros">
           <div className="libros-header">
-            <i className="bi bi-arrow-left" onClick={() => setCurrentSection(null)} style={{cursor: 'pointer', fontSize: '24px'}}></i>
-            <h2 className="clickable-title">Libros</h2>
+            <i className="bi bi-arrow-left" onClick={() => setCurrentSection(null)} style={{cursor: 'pointer', fontSize: '32px'}}></i>
           </div>
           
           <div className="subcategory-section">
-            <h3 className="subcategory-title">Want to read</h3>
+            <h3 className="subcategory-title">Pendiente</h3>
             <div className="libros">
               {Object.values(userBooks)
                 .filter(item => item.status === 'Want to read')
@@ -354,7 +353,7 @@ const HomePage = () => {
           </div>
 
           <div className="subcategory-section">
-            <h3 className="subcategory-title">Currently reading</h3>
+            <h3 className="subcategory-title">Leyendo</h3>
             <div className="libros">
               {Object.values(userBooks)
                 .filter(item => item.status === 'Currently reading')
@@ -379,7 +378,7 @@ const HomePage = () => {
           </div>
 
           <div className="subcategory-section">
-            <h3 className="subcategory-title">Read</h3>
+            <h3 className="subcategory-title">Leído</h3>
             <div className="libros">
               {Object.values(userBooks)
                 .filter(item => item.status === 'Read')
