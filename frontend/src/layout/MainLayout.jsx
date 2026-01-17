@@ -7,6 +7,7 @@ const MainLayout = () => {
   const [searchQuery, setSearchQuery] = useState('')
 
   const handleSearch = (query) => {
+    console.log('MainLayout - handleSearch recibió:', query)
     setSearchQuery(query)
   }
 

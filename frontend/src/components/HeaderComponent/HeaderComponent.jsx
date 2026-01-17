@@ -13,7 +13,7 @@ const HeaderComponent = ({ onSearch }) => {
   const handleSearch = (e) => {
     e.preventDefault()
     if (searchQuery.trim()) {
-      onSearch(searchQuery)
+      onSearch && onSearch(searchQuery)
       setSearchQuery('')
     }
   }
@@ -85,7 +85,7 @@ const HeaderComponent = ({ onSearch }) => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => {
               if (e.key === 'Enter' && searchQuery.trim()) {
-                onSearch(searchQuery)
+                onSearch && onSearch(searchQuery)
                 setSearchQuery('')
               }
             }}
