@@ -59,30 +59,60 @@ const HomePage = () => {
   return (
     <div className="home-page-container">
       <div className="section-libros-google">
-        <h2>Recomendaciones</h2>
+        <h2>{searchQuery ? 'Resultados de Búsqueda' : 'Recomendaciones'}</h2>
         <div className="libros-google">
-          {loading && <p>Cargando libros...</p>}
-          {error && <p className="error">{error}</p>}
-          {allBooks.length > 0 ? (
-            <div className="books-grid">
-              {allBooks.map((book, index) => (
-                <div key={index} className="book-card">
-                  <img 
-                    src={book.cover} 
-                    alt={book.titulo || 'Libro'}
-                    className="book-image"
-                  />
-                  <div className="book-info">
-                    <h3>{book.titulo}</h3>
-                    <p className="author">{book.autor}</p>
-                    <p className="year">📅 {book.fechaPublicacion}</p>
-                    <div className="rating">⭐ {book.rating}</div>
-                  </div>
+          {searchQuery ? (
+            <>
+              {loadingSearch && <p>Cargando libros...</p>}
+              {errorSearch && <p className="error">{errorSearch}</p>}
+              {googleBooks.length > 0 ? (
+                <div className="books-grid">
+                  {googleBooks.map((book, index) => (
+                    <div key={index} className="book-card">
+                      <img 
+                        src={book.cover} 
+                        alt={book.titulo || 'Libro'}
+                        className="book-image"
+                      />
+                      <div className="book-info">
+                        <h3>{book.titulo}</h3>
+                        <p className="author">{book.autor}</p>
+                        <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
+                        <div className="rating"><i className="bi bi-star-fill"></i> {book.rating}</div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              ) : (
+                <p>No hay libros disponibles</p>
+              )}
+            </>
           ) : (
-            !loading && <p>No hay libros disponibles</p>
+            <>
+              {loading && <p>Cargando libros...</p>}
+              {error && <p className="error">{error}</p>}
+              {allBooks.length > 0 ? (
+                <div className="books-grid">
+                  {allBooks.map((book, index) => (
+                    <div key={index} className="book-card">
+                      <img 
+                        src={book.cover} 
+                        alt={book.titulo || 'Libro'}
+                        className="book-image"
+                      />
+                      <div className="book-info">
+                        <h3>{book.titulo}</h3>
+                        <p className="author">{book.autor}</p>
+                        <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
+                        <div className="rating"><i className="bi bi-star-fill"></i> {book.rating}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                !loading && <p>No hay libros disponibles</p>
+              )}
+            </>
           )}
         </div>
       </div>
@@ -90,29 +120,6 @@ const HomePage = () => {
       <div className="section-libros">
         <h2>Libros</h2>
         <div className="libros">
-          {loadingSearch && <p>Cargando libros...</p>}
-          {errorSearch && <p className="error">{errorSearch}</p>}
-          {googleBooks.length > 0 ? (
-            <div className="books-grid">
-              {googleBooks.map((book, index) => (
-                <div key={index} className="book-card">
-                  <img 
-                    src={book.cover} 
-                    alt={book.titulo || 'Libro'}
-                    className="book-image"
-                  />
-                  <div className="book-info">
-                    <h3>{book.titulo}</h3>
-                    <p className="author">{book.autor}</p>
-                    <p className="year">📅 {book.fechaPublicacion}</p>
-                    <div className="rating">⭐ {book.rating}</div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            !loadingSearch && searchQuery && <p>No hay libros disponibles</p>
-          )}
         </div>
       </div>
 
