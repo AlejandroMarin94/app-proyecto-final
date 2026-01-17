@@ -17,6 +17,7 @@ const HomePage = () => {
   const [selectedStatus, setSelectedStatus] = useState({})
   const [currentSection, setCurrentSection] = useState(null)
   const [userBooks, setUserBooks] = useState({})
+  const [favoriteBooks, setFavoriteBooks] = useState({})
 
   // Cargar todos los libros de la BD al montar
   useEffect(() => {
@@ -103,6 +104,20 @@ const HomePage = () => {
     setOpenDropdown(null)
   }
 
+  const toggleFavorite = (book) => {
+    const bookId = book.id || book.titulo
+    if (favoriteBooks[bookId]) {
+      const newFavorites = { ...favoriteBooks }
+      delete newFavorites[bookId]
+      setFavoriteBooks(newFavorites)
+    } else {
+      setFavoriteBooks({
+        ...favoriteBooks,
+        [bookId]: book
+      })
+    }
+  }
+
   return (
     <div className="home-page-container">
       {currentSection === null && (
@@ -131,7 +146,10 @@ const HomePage = () => {
                             <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                             <div className="rating">
                               <span><i className="bi bi-star-fill"></i> {book.rating}</span>
-                              <i className="bi bi-heart heart-icon"></i>
+                              <i 
+                                className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                                onClick={() => toggleFavorite(book)}
+                              ></i>
                             </div>
                           </>
                         )}
@@ -194,7 +212,10 @@ const HomePage = () => {
                             <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                             <div className="rating">
                               <span><i className="bi bi-star-fill"></i> {book.rating}</span>
-                              <i className="bi bi-heart heart-icon"></i>
+                              <i 
+                                className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                                onClick={() => toggleFavorite(book)}
+                              ></i>
                             </div>
                           </>
                         )}
@@ -249,6 +270,19 @@ const HomePage = () => {
       <div className="section-libros-favoritos">
         <h2 onClick={() => setCurrentSection('favoritos')} className="clickable-title">Libros Favoritos</h2>
         <div className="libros-favoritos-content">
+          {Object.values(favoriteBooks).length > 0 ? (
+            Object.values(favoriteBooks).map((book, idx) => (
+              <div key={idx} className="user-book-item">
+                <img src={book.cover} alt={book.titulo} className="user-book-image" />
+                <div className="user-book-info">
+                  <h4>{book.titulo}</h4>
+                  <p>{book.autor}</p>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>No hay libros favoritos</p>
+          )}
         </div>
       </div>
         </>
@@ -314,6 +348,19 @@ const HomePage = () => {
         <div className="section-libros-favoritos">
           <h2 onClick={() => setCurrentSection(null)} className="clickable-title"><i className="bi bi-arrow-left"></i> Libros Favoritos</h2>
           <div className="libros-favoritos-content">
+            {Object.values(favoriteBooks).length > 0 ? (
+              Object.values(favoriteBooks).map((book, idx) => (
+                <div key={idx} className="user-book-item">
+                  <img src={book.cover} alt={book.titulo} className="user-book-image" />
+                  <div className="user-book-info">
+                    <h4>{book.titulo}</h4>
+                    <p>{book.autor}</p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <p>No hay libros favoritos</p>
+            )}
           </div>
         </div>
       )}
