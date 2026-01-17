@@ -28,7 +28,7 @@
 .libros-google,
 .libros,
 .libros-favoritos-content {
-  height: 520px;
+  height: 650px;
   overflow-x: auto;
   overflow-y: hidden;
   width: 100%;

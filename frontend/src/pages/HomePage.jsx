@@ -12,6 +12,7 @@ const HomePage = () => {
   const [loadingSearch, setLoadingSearch] = useState(false)
   const [error, setError] = useState(null)
   const [errorSearch, setErrorSearch] = useState(null)
+  const [openDropdown, setOpenDropdown] = useState(null)
 
   // Cargar todos los libros de la BD al montar
   useEffect(() => {
@@ -56,6 +57,16 @@ const HomePage = () => {
     fetchBooks()
   }, [searchQuery])
 
+  const toggleDropdown = (index, section) => {
+    const key = `${section}-${index}`
+    setOpenDropdown(openDropdown === key ? null : key)
+  }
+
+  const handleBookStatus = (status) => {
+    console.log(`Libro marcado como: ${status}`)
+    setOpenDropdown(null)
+  }
+
   return (
     <div className="home-page-container">
       <div className="section-libros-google">
@@ -79,12 +90,36 @@ const HomePage = () => {
                         <p className="author">{book.autor}</p>
                         <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                         <div className="rating"><i className="bi bi-star-fill"></i> {book.rating}</div>
-                        <div className="want-to-read-btn">
-                          <span>Want to read</span>
-                          <button className="dropdown-btn">
+                        {openDropdown === `search-${index}` ? (
+                          <div className="book-options">
+                            <div className="options-header">
+                              <button className="close-btn" onClick={() => setOpenDropdown(null)}>
+                                <i className="bi bi-x"></i>
+                              </button>
+                              <span>Add to my books</span>
+                              <button className="ok-btn" onClick={() => handleBookStatus('confirmed')}>
+                                <i className="bi bi-check"></i>
+                              </button>
+                            </div>
+                            <label>
+                              <input type="radio" name={`status-search-${index}`} onChange={() => handleBookStatus('Want to read')} />
+                              Want to read
+                            </label>
+                            <label>
+                              <input type="radio" name={`status-search-${index}`} onChange={() => handleBookStatus('Currently reading')} />
+                              Currently reading
+                            </label>
+                            <label>
+                              <input type="radio" name={`status-search-${index}`} onChange={() => handleBookStatus('Read')} />
+                              Read
+                            </label>
+                          </div>
+                        ) : (
+                          <button className="want-to-read-btn" onClick={() => toggleDropdown(index, 'search')}>
+                            <span>Want to read</span>
                             <i className="bi bi-triangle-fill"></i>
                           </button>
-                        </div>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -111,12 +146,36 @@ const HomePage = () => {
                         <p className="author">{book.autor}</p>
                         <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                         <div className="rating"><i className="bi bi-star-fill"></i> {book.rating}</div>
-                        <div className="want-to-read-btn">
-                          <span>Want to read</span>
-                          <button className="dropdown-btn">
+                        {openDropdown === `all-${index}` ? (
+                          <div className="book-options">
+                            <div className="options-header">
+                              <button className="close-btn" onClick={() => setOpenDropdown(null)}>
+                                <i className="bi bi-x"></i>
+                              </button>
+                              <span>Add to my books</span>
+                              <button className="ok-btn" onClick={() => handleBookStatus('confirmed')}>
+                                <i className="bi bi-check"></i>
+                              </button>
+                            </div>
+                            <label>
+                              <input type="radio" name={`status-all-${index}`} onChange={() => handleBookStatus('Want to read')} />
+                              Want to read
+                            </label>
+                            <label>
+                              <input type="radio" name={`status-all-${index}`} onChange={() => handleBookStatus('Currently reading')} />
+                              Currently reading
+                            </label>
+                            <label>
+                              <input type="radio" name={`status-all-${index}`} onChange={() => handleBookStatus('Read')} />
+                              Read
+                            </label>
+                          </div>
+                        ) : (
+                          <button className="want-to-read-btn" onClick={() => toggleDropdown(index, 'all')}>
+                            <span>Want to read</span>
                             <i className="bi bi-triangle-fill"></i>
                           </button>
-                        </div>
+                        )}
                       </div>
                     </div>
                   ))}
