@@ -37,7 +37,7 @@ const PerfilPage = () => {
         const response = await getUserData(userObj._id)
         console.log("respuesta del backend:", response)
         if (response && response.data) {
-          console.log("Datos recibidos:"
+          console.log("Datos recibidos:", response.data)
           localStorage.setItem('userData', JSON.stringify(response.data))
         } else if (response && response.status === "Success") {
           // Fallback en caso de que los datos estén en otro campo

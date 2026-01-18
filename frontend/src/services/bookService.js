@@ -25,8 +25,10 @@ export async function getAllBooks() {
         
         const data = await response.json();
         console.log('Response data completa:', data);
+        return data;
         
     } catch (error) {
-        console.error
+        console.error('Error al obtener libros:', error);
+        throw error;
     }
 }

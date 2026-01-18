@@ -319,20 +319,14 @@ const insertarLibros = async () => {
   try {
     const URL_MONGODB = process.env.URL_MONGODB;
     await mongoose.connect(URL_MONGODB);
-    console.log("✅ Conectado a MongoDB");
 
-    // Limpiar colección anterior (opcional)
     await bookModel.deleteMany({});
-    console.log("🗑️ Colección anterior eliminada");
 
-    // Insertar los libros
     const resultado = await bookModel.insertMany(librosApp);
-    console.log(`✅ Se insertaron ${resultado.length} libros correctamente`);
 
     await mongoose.disconnect();
-    console.log("✅ Desconectado de MongoDB");
   } catch (error) {
-    console.error("❌ Error al insertar libros:", error.message);
+    console.error(" Error al insertar libros:", error.message);
   }
 };
 

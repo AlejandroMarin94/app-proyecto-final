@@ -52,8 +52,9 @@ const login = async (req, res) => {
           message: "Credenciales introducidas incorrectas",
         });
     }
-    console.log(password, user.password);
-    const validatePassword = await bcrypt.compare(password, user.passwordssword) {
+    const validatePassword = await bcrypt.compare(password, user.password);
+    
+    if (!validatePassword) {
       return res
         .status(404)
         .send({
@@ -63,7 +64,6 @@ const login = async (req, res) => {
     }
 
     if (!user.isActive) {
-      console.log("No pasas");
       return res
         .send({
           status: "Failed",

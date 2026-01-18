@@ -4,6 +4,6 @@ const { verifyToken } = require("../middleware/auth.js");
 
 const router = express.Router();
 
-router.get("/", verifyToken, getAllBooks);       // Obtener todos los libros
+router.get("/", verifyToken, getAllBooks);       
 
 module.exports = router;

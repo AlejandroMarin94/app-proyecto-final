@@ -8,10 +8,8 @@ router.post("/signup", signup)
 router.post("/login", login)
 
 
-//Endpoint para login con token
 router.post("/loginToken", verifyToken, loginWithToken);
 
-//Endpoint para actualizar el token principal
 router.post("/updatePrincipalToken", verifyToken, updatePrincipalToken);
 
 module.exports = router;
