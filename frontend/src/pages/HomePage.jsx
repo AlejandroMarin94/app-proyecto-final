@@ -20,7 +20,6 @@ const HomePage = () => {
   const [favoriteBooks, setFavoriteBooks] = useState({})
   const [dataLoaded, setDataLoaded] = useState(false)
 
-  // Cargar favoritos y userBooks del localStorage al montar
   useEffect(() => {
     try {
       const savedFavorites = localStorage.getItem('favoriteBooks')
@@ -38,7 +37,6 @@ const HomePage = () => {
     }
   }, [])
 
-  // Guardar favoritos en localStorage
   useEffect(() => {
     if (!dataLoaded) return
     try {
@@ -48,7 +46,6 @@ const HomePage = () => {
     }
   }, [favoriteBooks, dataLoaded])
 
-  // Guardar userBooks en localStorage
   useEffect(() => {
     if (!dataLoaded) return
     try {
@@ -58,7 +55,6 @@ const HomePage = () => {
     }
   }, [userBooks, dataLoaded])
 
-  // Cargar todos los libros de la BD al montar
   useEffect(() => {
     const fetchAllBooks = async () => {
       setLoading(true)
@@ -67,7 +63,6 @@ const HomePage = () => {
         setAllBooks(data)
         setError(null)
       } catch (err) {
-        // Manejo del error de autenticación
         if (err.type === 'AUTH_ERROR') {
           localStorage.removeItem('userData')
           localStorage.removeItem('token')
@@ -85,14 +80,12 @@ const HomePage = () => {
     fetchAllBooks()
   }, [navigate])
 
-  // Cargar libros según búsqueda (filtro local)
   useEffect(() => {
     if (!searchQuery) {
       setGoogleBooks([])
       return
     }
 
-    // Filtrar allBooks localmente por título, autor o categoría
     const filtered = allBooks.filter(book =>
       book.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
       book.autor.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -118,7 +111,6 @@ const HomePage = () => {
     const key = `${section}-${index}`
     const selectedState = selectedStatus[key]
     if (selectedState) {
-      // Guardar solo los datos serializables del libro
       const bookData = {
         id: book.id,
         titulo: book.titulo,
@@ -142,7 +134,6 @@ const HomePage = () => {
       delete newFavorites[bookId]
       setFavoriteBooks(newFavorites)
     } else {
-      // Guardar solo los datos serializables del libro
       const bookData = {
         id: book.id,
         titulo: book.titulo,

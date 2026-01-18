@@ -8,7 +8,6 @@ export async function getAllBooks() {
             }
         });
         
-        // Manejo específico del token expirado
         if (response.status === 401) {
             const errorData = await response.json().catch(() => ({}));
             throw {
@@ -24,7 +23,6 @@ export async function getAllBooks() {
         }
         
         const data = await response.json();
-        console.log('Response data completa:', data);
         return data;
         
     } catch (error) {

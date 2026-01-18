@@ -69,7 +69,6 @@ const LoginCardComponent = () => {
             <div className="card rounded-3 text-black">
               <div className={`row g-0 ${formData.isRegister ? 'row-register' : ''}`}>
                 
-                {/* LEFT SIDE */}
                 <div className={`col-lg-6 transition-page ${formData.isRegister ? 'd-flex align-items-center left-section-register' : ''}`}>
                   <div className={`content-transition ${formData.isRegister ? 'text-white px-3 py-4 p-md-5 mx-md-4 w-100' : 'card-body p-md-5 mx-md-4'}`}>
                     {!formData.isRegister ? (
@@ -157,7 +156,6 @@ const LoginCardComponent = () => {
                   </div>
                 </div>
 
-                {/* RIGHT SIDE */}
                 <div className={`col-lg-6 transition-page d-flex align-items-center ${formData.isRegister ? '' : 'gradient-custom-2'}`}>
                   <div className="content-transition w-100">
                     {!formData.isRegister ? (

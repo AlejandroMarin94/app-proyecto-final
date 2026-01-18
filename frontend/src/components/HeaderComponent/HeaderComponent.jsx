@@ -79,19 +79,15 @@ const HeaderComponent = ({ onSearch }) => {
        
         {location.pathname === '/homepage' && (
           <div className="header-search-div">
-            <input 
-              type="text" 
-              placeholder="Buscar libros..." 
-              className="header-search-input"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onKeyPress={(e) => {
-                if (e.key === 'Enter' && searchQuery.trim()) {
-                  onSearch && onSearch(searchQuery)
-                  setSearchQuery('')
-                }
-              }}
-            />
+            <form onSubmit={handleSearch}>
+              <input 
+                type="text" 
+                placeholder="Buscar libros..." 
+                className="header-search-input"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </form>
           </div>
         )}
 

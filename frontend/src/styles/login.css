@@ -1,12 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
-/* ===== MOBILE FIRST - BASE STYLES (576px y menores) ===== */
 
 * {
   box-sizing: border-box;
 }
 
-/* Estilo para el contenedor principal */
 .gradient-form {
   background-color: #eee;
   min-height: 100vh;
@@ -37,7 +35,6 @@ a {
   padding-bottom: 1rem !important;
 }
 
-/* Tarjeta */
 .card {
   border-radius: 0.3rem !important;
   margin: 0.5rem;
@@ -51,13 +48,11 @@ a {
   height: auto !important;
 }
 
-/* Grid layout mobile */
 .col-lg-6 {
   flex: 0 0 100% !important;
   max-width: 100% !important;
 }
 
-/* Inputs y formularios */
 .form-outline .form-control,
 .form-control {
   border: 1px solid #ced4da !important;
@@ -120,7 +115,6 @@ a {
   margin-bottom: 0.5rem !important;
 }
 
-/* Gradiente principal */
 .gradient-custom-2 {
   background: linear-gradient(to right, #4A90E2, #7ED321);
   border-top-right-radius: 0.3rem;
@@ -128,7 +122,6 @@ a {
   color: white;
 }
 
-/* Logos */
 .logo-login {
   width: 100px;
 }
@@ -137,7 +130,6 @@ a {
   width: 80px;
 }
 
-/* Títulos */
 .title-rounded {
   font-family: 'Poppins', sans-serif !important;
   font-weight: 700 !important;
@@ -153,7 +145,6 @@ a {
   font-size: 0.8rem !important;
 }
 
-/* Transiciones */
 .transition-page {
   transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
   transform-origin: center;
@@ -163,7 +154,6 @@ a {
   transition: opacity 0.6s ease-in-out, background-color 0.8s ease-in-out;
 }
 
-/* Sección de cita */
 .left-section-register {
   background: linear-gradient(to right, #4A90E2, #7ED321);
 }
@@ -187,14 +177,12 @@ a {
   margin-top: 1rem;
 }
 
-/* Alertas */
 .message-register {
   font-size: 0.7rem !important;
   padding: 0.5rem 0.75rem !important;
   margin-bottom: 0.75rem !important;
 }
 
-/* ===== TABLETS (576px a 768px) ===== */
 @media (min-width: 576px) {
   body,
   p,
@@ -317,7 +305,6 @@ a {
   }
 }
 
-/* ===== DESKTOP (768px y mayor) ===== */
 @media (min-width: 768px) {
   body,
   p,
@@ -444,7 +431,6 @@ a {
   }
 }
 
-/* ===== DESKTOP GRANDE (992px y mayor) ===== */
 @media (min-width: 992px) {
   .col-lg-6 {
     flex: 0 0 50% !important;
@@ -561,7 +547,6 @@ a {
   }
 }
 
-/* ===== PASSWORD INPUT STYLES ===== */
 .password-input-container {
   position: relative;
 }

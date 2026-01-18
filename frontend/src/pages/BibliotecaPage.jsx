@@ -10,7 +10,6 @@ const BibliotecaPage = () => {
     leido: []
   })
   const [favoriteBooks, setFavoriteBooks] = useState({})
-  const [dataLoaded, setDataLoaded] = useState(false)
 
   const loadBooks = () => {
     try {
@@ -42,11 +41,8 @@ const BibliotecaPage = () => {
       if (savedFavorites) {
         setFavoriteBooks(JSON.parse(savedFavorites))
       }
-
-      setDataLoaded(true)
     } catch (err) {
       console.error('Error al cargar datos del localStorage:', err)
-      setDataLoaded(true)
     }
   }
 
@@ -89,7 +85,6 @@ const BibliotecaPage = () => {
       </div>
 
       <div className="biblioteca-sections">
-        {/* Pendiente */}
         <section className="biblioteca-subcategory">
           <h2>Pendiente</h2>
           <div className="biblioteca-books-grid">
@@ -117,7 +112,6 @@ const BibliotecaPage = () => {
           </div>
         </section>
 
-        {/* Leyendo */}
         <section className="biblioteca-subcategory">
           <h2>Leyendo</h2>
           <div className="biblioteca-books-grid">
@@ -145,7 +139,6 @@ const BibliotecaPage = () => {
           </div>
         </section>
 
-        {/* Leído */}
         <section className="biblioteca-subcategory">
           <h2>Leído</h2>
           <div className="biblioteca-books-grid">

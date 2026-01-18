@@ -9,7 +9,7 @@ export const handleLogin = async (e, formData, handlers) => {
   setSuccess("");
 
   try {
-    const data = await login({
+    await login({
       email: formData.username,
       password: formData.password,
     });
@@ -20,7 +20,6 @@ export const handleLogin = async (e, formData, handlers) => {
       navigate("/homepage");
     }, 1500);
   } catch (err) {
-    // Si es error de autenticación, redirigir al login
     if (err.type === "AUTH_ERROR") {
       navigate("/login");
       setError("Tu sesión ha expirado. Por favor inicia sesión de nuevo.");
@@ -40,7 +39,6 @@ export const handleRegister = async (e, formData, handlers) => {
   setError("");
   setSuccess("");
 
-  // Validar que las contraseñas coincidan
   if (formData.passwordRegister !== formData.confirmPassword) {
     setError("Las contraseñas no coinciden");
     setLoading(false);
@@ -69,7 +67,6 @@ export const handleRegister = async (e, formData, handlers) => {
       password: "",
     }));
   } catch (err) {
-    // Si es error de autenticación, redirigir al login
     if (err.type === "AUTH_ERROR") {
       navigate("/login");
       setError("Tu sesión ha expirado. Por favor inicia sesión de nuevo.");

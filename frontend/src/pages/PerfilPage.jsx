@@ -13,12 +13,11 @@ const PerfilPage = () => {
     role: '',
     isActive: '',
   })
-
+  const [originalUserData, setOriginalUserData] = useState(null)
   const [isEditing, setIsEditing] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  // Cargar datos del usuario desde el backend
   useEffect(() => {
     const loadUserData = async () => {
       try {
@@ -35,21 +34,19 @@ const PerfilPage = () => {
         const userObj = JSON.parse(userDataStr)
         
         const response = await getUserData(userObj._id)
-        console.log("respuesta del backend:", response)
+        
         if (response && response.data) {
-          console.log("Datos recibidos:", response.data)
+          setUserData(response.data)
           localStorage.setItem('userData', JSON.stringify(response.data))
         } else if (response && response.status === "Success") {
           // Fallback en caso de que los datos estén en otro campo
-          console.log("Respuesta con status Success:", response)
+          setUserData(response.data || response)
         } else {
-          console.log("Respuesta inesperada:", response)
           setError('Formato de respuesta inesperado')
         }
       } catch (err) {
         console.error("Error completo:", err)
         if (err.type === 'AUTH_ERROR') {
-          console.log("Token expirado, redirigiendo a login")
           navigate('/login')
         } else {
           setError(err.message || 'Error al cargar datos del usuario')
@@ -105,6 +102,17 @@ const PerfilPage = () => {
     }
   }
 
+  const handleToggleEdit = () => {
+    if (isEditing) {
+      if (originalUserData) {
+        setUserData(originalUserData)
+      }
+    } else {
+      setOriginalUserData(userData)
+    }
+    setIsEditing(!isEditing)
+  }
+
   return (
     <div className="perfil-page-container">
       <div className="section-perfil">
@@ -112,7 +120,7 @@ const PerfilPage = () => {
           <h2>Mi Perfil</h2>
           <button 
             className="btn-edit"
-            onClick={() => setIsEditing(!isEditing)}
+            onClick={handleToggleEdit}
             disabled={loading}
           >
             {isEditing ? 'Cancelar' : 'Editar'}

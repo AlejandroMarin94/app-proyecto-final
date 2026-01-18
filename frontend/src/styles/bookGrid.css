@@ -231,7 +231,6 @@
   padding: 10px;
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
   .books-grid {
     grid-template-columns: repeat(4, 1fr);

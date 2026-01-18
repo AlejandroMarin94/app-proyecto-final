@@ -1,8 +1,5 @@
 const API_URL = "http://localhost:3000/api/user";
 
-/**
- * Intenta renovar el token usando el refreshToken
- */
 const refreshAccessToken = async () => {
   try {
     const refreshToken = localStorage.getItem("refreshToken");
@@ -40,9 +37,6 @@ const refreshAccessToken = async () => {
   }
 };
 
-/**
- * Realiza una petición y maneja automáticamente la renovación de token si expira
- */
 const makeRequest = async (url, options = {}) => {
   let token = localStorage.getItem("token");
 
@@ -60,7 +54,6 @@ const makeRequest = async (url, options = {}) => {
     headers,
   });
 
-  // Si es 401 (token expirado), intentar renovar y reintentar
   if (response.status === 401) {
     const newToken = await refreshAccessToken();
     const newHeaders = {
