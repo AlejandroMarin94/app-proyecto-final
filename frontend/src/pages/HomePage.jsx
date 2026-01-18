@@ -132,7 +132,6 @@ const HomePage = () => {
         [book.id || book.titulo]: { book: bookData, status: selectedState }
       })
     }
-    console.log(`Libro marcado como: ${selectedState}`)
     setOpenDropdown(null)
   }
 

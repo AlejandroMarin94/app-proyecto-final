@@ -26,7 +26,6 @@ const PerfilPage = () => {
         setError(null)
         
         const userDataStr = localStorage.getItem('userData')
-        console.log("userData de localStorage:", userDataStr)
         
         if (!userDataStr) {
           navigate('/login')
@@ -34,19 +33,15 @@ const PerfilPage = () => {
         }
 
         const userObj = JSON.parse(userDataStr)
-        console.log("userObj._id:", userObj._id)
         
         const response = await getUserData(userObj._id)
         console.log("respuesta del backend:", response)
-        
         if (response && response.data) {
-          console.log("Datos recibidos:", response.data)
-          setUserData(response.data)
+          console.log("Datos recibidos:"
           localStorage.setItem('userData', JSON.stringify(response.data))
         } else if (response && response.status === "Success") {
           // Fallback en caso de que los datos estén en otro campo
           console.log("Respuesta con status Success:", response)
-          setError('No se encontraron datos de usuario')
         } else {
           console.log("Respuesta inesperada:", response)
           setError('Formato de respuesta inesperado')

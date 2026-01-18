@@ -3,7 +3,6 @@ const userModel = require('../models/userModel');
 const deleteUserById = async (req, res) => {
   try {
     const { idUser } = req.params;
-    console.log(idUser);
     const user = await userModel.findByIdAndDelete(idUser);
     if (!user) return res.status(200).send("No existe usuario con ese id");
     res
@@ -35,7 +34,6 @@ const editUserById = async (req, res) => {
 const getUserById = async (req, res) => {
   try {
     const { idUser } = req.params;
-    console.log(idUser);
     const user = await userModel.findById(idUser);
     if (!user) return res.status(200).send("No existe usuario con ese id");
     res.status(200).send({ status: "Success", data: user });

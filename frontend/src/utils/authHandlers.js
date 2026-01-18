@@ -13,7 +13,6 @@ export const handleLogin = async (e, formData, handlers) => {
       email: formData.username,
       password: formData.password,
     });
-    console.log("Login exitoso:", data.userData);
 
     setSuccess("Inicio de sesión exitoso");
 

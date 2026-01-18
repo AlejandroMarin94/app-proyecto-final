@@ -6,7 +6,6 @@ const BCRYPT_ROUNDS = Number(process.env.BCRYPT_ROUNDS) || 10;
 
 const signup = async (req, res) => {
   try {
-    console.log("Body recibido en signup:", req.body);
     const { name, lastName, email, password } = req.body;
 
     const existingEmail = await userModel.findOne({ email });
@@ -40,12 +39,10 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("body recibido", req.body);
 
     const user = await userModel
       .findOne({ email: email })
       .select("name lastName age email password role isActive");
-    console.log("Usuario encontrado:", user.password);
 
     if (!user) {
       return res
@@ -56,9 +53,7 @@ const login = async (req, res) => {
         });
     }
     console.log(password, user.password);
-    const validatePassword = await bcrypt.compare(password, user.password);
-    console.log("2");
-    if (!validatePassword) {
+    const validatePassword = await bcrypt.compare(password, user.passwordssword) {
       return res
         .status(404)
         .send({
@@ -70,7 +65,6 @@ const login = async (req, res) => {
     if (!user.isActive) {
       console.log("No pasas");
       return res
-        .status(200)
         .send({
           status: "Failed",
           message:
