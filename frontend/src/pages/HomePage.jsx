@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useOutletContext, useNavigate } from 'react-router-dom'
-import { searchNewBooks, getAllBooks } from '../services/bookService'
+import { getAllBooks } from '../services/bookService'
 import '../styles/homePage.css'
 import '../styles/bookGrid.css'
 
@@ -85,37 +85,21 @@ const HomePage = () => {
     fetchAllBooks()
   }, [navigate])
 
-  // Cargar libros según búsqueda
+  // Cargar libros según búsqueda (filtro local)
   useEffect(() => {
-    const fetchBooks = async () => {
-      if (!searchQuery) {
-        setGoogleBooks([])
-        return
-      }
-
-      setLoadingSearch(true)
-      try {
-        const data = await searchNewBooks(searchQuery)
-        setGoogleBooks(data)
-        setErrorSearch(null)
-      } catch (err) {
-        // Manejo del error de autenticación
-        if (err.type === 'AUTH_ERROR') {
-          localStorage.removeItem('userData')
-          localStorage.removeItem('token')
-          localStorage.removeItem('refreshToken')
-          navigate('/login')
-        } else {
-          setErrorSearch('Error al cargar libros')
-        }
-        console.error(err)
-      } finally {
-        setLoadingSearch(false)
-      }
+    if (!searchQuery) {
+      setGoogleBooks([])
+      return
     }
 
-    fetchBooks()
-  }, [searchQuery, navigate])
+    // Filtrar allBooks localmente por título, autor o categoría
+    const filtered = allBooks.filter(book =>
+      book.titulo.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      book.autor.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (book.categoria && book.categoria.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
+    setGoogleBooks(filtered)
+  }, [searchQuery, allBooks])
 
   const toggleDropdown = (index, section) => {
     const key = `${section}-${index}`
