@@ -1,6 +1,6 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
-const bookModel = require("./src/models/bookModel");
+const bookModel = require("../models/bookModel");
 
 const librosApp = [
   // HARRY POTTER
