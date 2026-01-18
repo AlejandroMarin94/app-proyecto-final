@@ -4,6 +4,7 @@ import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import MainLayout from "./layout/MainLayout";
 import HomePage from "./pages/HomePage";
 import PerfilPage from "./pages/PerfilPage";
+import BibliotecaPage from "./pages/BibliotecaPage";
 
 function App() {
   return (
@@ -32,8 +33,19 @@ function App() {
       >
         <Route index element={<PerfilPage />} />
       </Route>
+
+      <Route 
+        path="/biblioteca" 
+        element={
+          <ProtectedRoute>
+            <MainLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<BibliotecaPage />} />
+      </Route>
     </Routes>
-  );
+  )
 }
 
 export default App

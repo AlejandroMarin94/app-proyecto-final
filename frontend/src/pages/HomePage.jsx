@@ -222,15 +222,15 @@ const HomePage = () => {
                               </button>
                             </div>
                             <label>
-                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Want to read'} onChange={() => handleSelectStatus('Want to read', index, 'search')} />
+                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Pendiente'} onChange={() => handleSelectStatus('Pendiente', index, 'search')} />
                               Pendiente
                             </label>
                             <label>
-                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Currently reading'} onChange={() => handleSelectStatus('Currently reading', index, 'search')} />
+                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Leyendo'} onChange={() => handleSelectStatus('Leyendo', index, 'search')} />
                               Leyendo
                             </label>
                             <label>
-                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Read'} onChange={() => handleSelectStatus('Read', index, 'search')} />
+                              <input type="radio" name={`status-search-${index}`} checked={selectedStatus[`search-${index}`] === 'Leído'} onChange={() => handleSelectStatus('Leído', index, 'search')} />
                               Leído
                             </label>
                           </div>
@@ -288,15 +288,15 @@ const HomePage = () => {
                               </button>
                             </div>
                             <label>
-                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Want to read'} onChange={() => handleSelectStatus('Want to read', index, 'all')} />
+                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Pendiente'} onChange={() => handleSelectStatus('Pendiente', index, 'all')} />
                               Pendiente
                             </label>
                             <label>
-                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Currently reading'} onChange={() => handleSelectStatus('Currently reading', index, 'all')} />
+                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Leyendo'} onChange={() => handleSelectStatus('Leyendo', index, 'all')} />
                               Leyendo
                             </label>
                             <label>
-                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Read'} onChange={() => handleSelectStatus('Read', index, 'all')} />
+                              <input type="radio" name={`status-all-${index}`} checked={selectedStatus[`all-${index}`] === 'Leído'} onChange={() => handleSelectStatus('Leído', index, 'all')} />
                               Leído
                             </label>
                           </div>
@@ -319,13 +319,13 @@ const HomePage = () => {
       </div>
 
       <div className="section-libros">
-        <h2 onClick={() => setCurrentSection('libros')} className="clickable-title" style={{position: 'relative', textAlign: 'center'}}><i className="bi bi-book-half" style={{color: '#000000', marginRight: '8px', fontSize: '24px'}}></i>Mi biblioteca<i className="bi bi-arrow-right" style={{color: '#333', fontSize: '32px', position: 'absolute', right: '0'}}></i></h2>
+        <h2 onClick={() => navigate('/biblioteca')} className="clickable-title" style={{position: 'relative', textAlign: 'center'}}><i className="bi bi-book-half" style={{color: '#000000', marginRight: '8px', fontSize: '24px'}}></i>Mi biblioteca<i className="bi bi-arrow-right" style={{color: '#333', fontSize: '32px', position: 'absolute', right: '0'}}></i></h2>
         <div className="libros">
           {Object.values(userBooks)
-            .filter(item => item.status === 'Currently reading')
+            .filter(item => item.status === 'Leyendo')
             .length > 0 ? (
             Object.values(userBooks)
-              .filter(item => item.status === 'Currently reading')
+              .filter(item => item.status === 'Leyendo')
               .map((item, idx) => (
                 <div key={idx} className="book-card">
                   <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
@@ -388,7 +388,7 @@ const HomePage = () => {
             <h3 className="subcategory-title">Pendiente</h3>
             <div className="libros">
               {Object.values(userBooks)
-                .filter(item => item.status === 'Want to read')
+                .filter(item => item.status === 'Pendiente')
                 .map((item, idx) => (
                   <div key={idx} className="book-card">
                     <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
@@ -413,7 +413,7 @@ const HomePage = () => {
             <h3 className="subcategory-title">Leyendo</h3>
             <div className="libros">
               {Object.values(userBooks)
-                .filter(item => item.status === 'Currently reading')
+                .filter(item => item.status === 'Leyendo')
                 .map((item, idx) => (
                   <div key={idx} className="book-card">
                     <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
@@ -438,7 +438,7 @@ const HomePage = () => {
             <h3 className="subcategory-title">Leído</h3>
             <div className="libros">
               {Object.values(userBooks)
-                .filter(item => item.status === 'Read')
+                .filter(item => item.status === 'Leído')
                 .map((item, idx) => (
                   <div key={idx} className="book-card">
                     <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
