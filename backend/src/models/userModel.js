@@ -40,6 +40,24 @@ const userSchema = new Schema({
     default: true,
   },
 
+  userBooks: {
+    type: {
+      pendiente: [mongoose.Schema.Types.Mixed],
+      leyendo: [mongoose.Schema.Types.Mixed],
+      leido: [mongoose.Schema.Types.Mixed]
+    },
+    default: {
+      pendiente: [],
+      leyendo: [],
+      leido: []
+    }
+  },
+
+  favoriteBooks: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
+  }
+
 });
 
 const userModel = mongoose.model('User', userSchema, 'users');

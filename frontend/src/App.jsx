@@ -36,7 +36,7 @@ function App() {
       </Route>
 
       <Route 
-        path="/biblioteca" 
+        path="/biblioteca/:id" 
         element={
           <ProtectedRoute>
             <MainLayout />

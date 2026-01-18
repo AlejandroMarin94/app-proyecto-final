@@ -1,92 +1,97 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { getUserLibrary, updateBook, removeBookFromLibrary } from '../services/bookService'
 import '../styles/bibliotecaPage.css'
 
 const BibliotecaPage = () => {
   const navigate = useNavigate()
+  const { id: userId } = useParams()
   const [userBooks, setUserBooks] = useState({
     pendiente: [],
     leyendo: [],
     leido: []
   })
   const [favoriteBooks, setFavoriteBooks] = useState({})
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const loadBooks = () => {
+  const loadBooks = async () => {
     try {
-      const savedUserBooks = localStorage.getItem('userBooks')
-      const savedFavorites = localStorage.getItem('favoriteBooks')
+      setLoading(true)
+      if (!userId) return
       
-      if (savedUserBooks) {
-        const parsedBooks = JSON.parse(savedUserBooks)
-        
-        const organized = {
+      const data = await getUserLibrary(userId)
+      if (data.status === 'Success') {
+        setUserBooks(data.userBooks || {
           pendiente: [],
           leyendo: [],
           leido: []
-        }
-
-        Object.values(parsedBooks).forEach(item => {
-          if (item.status === 'Pendiente') {
-            organized.pendiente.push(item.book)
-          } else if (item.status === 'Leyendo') {
-            organized.leyendo.push(item.book)
-          } else if (item.status === 'Leído') {
-            organized.leido.push(item.book)
-          }
         })
-
-        setUserBooks(organized)
-      }
-
-      if (savedFavorites) {
-        setFavoriteBooks(JSON.parse(savedFavorites))
+        setFavoriteBooks(data.favoriteBooks || {})
       }
     } catch (err) {
-      console.error('Error al cargar datos del localStorage:', err)
+      console.error('Error al cargar biblioteca:', err)
+      setError('Error al cargar biblioteca')
+    } finally {
+      setLoading(false)
     }
   }
 
   useEffect(() => {
     loadBooks()
-  }, [])
+  }, [userId])
 
-  const toggleFavorite = (book) => {
-    const bookId = book.id || book.titulo
-    if (favoriteBooks[bookId]) {
-      const newFavorites = { ...favoriteBooks }
-      delete newFavorites[bookId]
-      setFavoriteBooks(newFavorites)
-      localStorage.setItem('favoriteBooks', JSON.stringify(newFavorites))
-    } else {
-      const bookData = {
-        id: book.id,
-        titulo: book.titulo,
-        autor: book.autor,
-        fechaPublicacion: book.fechaPublicacion,
-        cover: book.cover,
-        rating: book.rating
+  const toggleFavorite = async (book) => {
+    try {
+      if (!userId) return
+      
+      const bookId = book.id || book.titulo
+      const isFavorite = !favoriteBooks[bookId]
+      
+      const response = await updateBook(userId, book, null, isFavorite)
+      
+      if (response.status === 'Success') {
+        setFavoriteBooks(response.favoriteBooks || {})
       }
-      const newFavorites = {
-        ...favoriteBooks,
-        [bookId]: bookData
-      }
-      setFavoriteBooks(newFavorites)
-      localStorage.setItem('favoriteBooks', JSON.stringify(newFavorites))
+    } catch (err) {
+      console.error('Error al actualizar favorito:', err)
+      setError('Error al actualizar favorito')
     }
   }
 
-  const removeBook = (book, section) => {
-    const newUserBooks = { ...userBooks }
-    newUserBooks[section] = newUserBooks[section].filter(b => (b.id || b.titulo) !== (book.id || book.titulo))
-    setUserBooks(newUserBooks)
-    
-    const savedUserBooks = localStorage.getItem('userBooks')
-    if (savedUserBooks) {
-      const parsedBooks = JSON.parse(savedUserBooks)
-      const bookId = book.id || book.titulo
-      delete parsedBooks[bookId]
-      localStorage.setItem('userBooks', JSON.stringify(parsedBooks))
+  const changeStatus = async (book, fromSection, toStatus) => {
+    try {
+      if (!userId) return
+      
+      const response = await updateBook(userId, book, toStatus, null)
+      
+      if (response.status === 'Success') {
+        setUserBooks(response.userBooks)
+      }
+    } catch (err) {
+      console.error('Error al cambiar estado:', err)
+      setError('Error al cambiar estado')
     }
+  }
+
+  const removeBook = async (book, section) => {
+    try {
+      if (!userId) return
+      
+      const response = await removeBookFromLibrary(userId, book, section)
+      
+      if (response.status === 'Success') {
+        setUserBooks(response.userBooks)
+        setFavoriteBooks(response.favoriteBooks || {})
+      }
+    } catch (err) {
+      console.error('Error al remover libro:', err)
+      setError('Error al remover libro')
+    }
+  }
+
+  if (loading) {
+    return <div className="biblioteca-page-container"><p>Cargando...</p></div>
   }
 
   return (

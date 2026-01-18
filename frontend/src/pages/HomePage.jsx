@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useOutletContext, useNavigate } from 'react-router-dom'
-import { getAllBooks } from '../services/bookService'
+import { getAllBooks, getUserLibrary, addBookToLibrary, updateBook } from '../services/bookService'
 import '../styles/homePage.css'
 import '../styles/bookGrid.css'
 
@@ -16,45 +16,34 @@ const HomePage = () => {
   const [openDropdown, setOpenDropdown] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState({})
   const [currentSection, setCurrentSection] = useState(null)
-  const [userBooks, setUserBooks] = useState({})
+  const [userBooks, setUserBooks] = useState({
+    pendiente: [],
+    leyendo: [],
+    leido: []
+  })
   const [favoriteBooks, setFavoriteBooks] = useState({})
-  const [dataLoaded, setDataLoaded] = useState(false)
 
-  useEffect(() => {
+  const userId = JSON.parse(localStorage.getItem('userData'))?._id
+
+  // Cargar biblioteca del usuario
+  const loadUserLibrary = async () => {
     try {
-      const savedFavorites = localStorage.getItem('favoriteBooks')
-      const savedUserBooks = localStorage.getItem('userBooks')
-      if (savedFavorites) {
-        setFavoriteBooks(JSON.parse(savedFavorites))
+      if (!userId) return
+      const data = await getUserLibrary(userId)
+      if (data.status === 'Success') {
+        setUserBooks(data.userBooks || {
+          pendiente: [],
+          leyendo: [],
+          leido: []
+        })
+        setFavoriteBooks(data.favoriteBooks || {})
       }
-      if (savedUserBooks) {
-        setUserBooks(JSON.parse(savedUserBooks))
-      }
-      setDataLoaded(true)
     } catch (err) {
-      console.error('Error al cargar datos del localStorage:', err)
-      setDataLoaded(true)
+      console.error('Error al cargar biblioteca del usuario:', err)
     }
-  }, [])
+  }
 
-  useEffect(() => {
-    if (!dataLoaded) return
-    try {
-      localStorage.setItem('favoriteBooks', JSON.stringify(favoriteBooks))
-    } catch (err) {
-      console.error('Error al guardar favoritos:', err)
-    }
-  }, [favoriteBooks, dataLoaded])
-
-  useEffect(() => {
-    if (!dataLoaded) return
-    try {
-      localStorage.setItem('userBooks', JSON.stringify(userBooks))
-    } catch (err) {
-      console.error('Error al guardar userBooks:', err)
-    }
-  }, [userBooks, dataLoaded])
-
+  // Cargar todos los libros
   useEffect(() => {
     const fetchAllBooks = async () => {
       setLoading(true)
@@ -80,6 +69,12 @@ const HomePage = () => {
     fetchAllBooks()
   }, [navigate])
 
+  // Cargar biblioteca del usuario
+  useEffect(() => {
+    loadUserLibrary()
+  }, [userId])
+
+  // Filtrar libros por búsqueda
   useEffect(() => {
     if (!searchQuery) {
       setGoogleBooks([])
@@ -107,45 +102,40 @@ const HomePage = () => {
     })
   }
 
-  const handleBookStatus = (status, index, section, book) => {
+  const handleBookStatus = async (status, index, section, book) => {
     const key = `${section}-${index}`
     const selectedState = selectedStatus[key]
-    if (selectedState) {
-      const bookData = {
-        id: book.id,
-        titulo: book.titulo,
-        autor: book.autor,
-        fechaPublicacion: book.fechaPublicacion,
-        cover: book.cover,
-        rating: book.rating
+    
+    if (selectedState && userId) {
+      try {
+        const response = await addBookToLibrary(userId, book, selectedState)
+        if (response.status === 'Success') {
+          setUserBooks(response.userBooks)
+          setOpenDropdown(null)
+          setSelectedStatus({})
+        }
+      } catch (err) {
+        console.error('Error al agregar libro:', err)
+        setError('Error al agregar libro')
       }
-      setUserBooks({
-        ...userBooks,
-        [book.id || book.titulo]: { book: bookData, status: selectedState }
-      })
     }
-    setOpenDropdown(null)
   }
 
-  const toggleFavorite = (book) => {
-    const bookId = book.id || book.titulo
-    if (favoriteBooks[bookId]) {
-      const newFavorites = { ...favoriteBooks }
-      delete newFavorites[bookId]
-      setFavoriteBooks(newFavorites)
-    } else {
-      const bookData = {
-        id: book.id,
-        titulo: book.titulo,
-        autor: book.autor,
-        fechaPublicacion: book.fechaPublicacion,
-        cover: book.cover,
-        rating: book.rating
+  const toggleFavorite = async (book) => {
+    try {
+      if (!userId) return
+      
+      const bookId = book.id || book.titulo
+      const isFavorite = !favoriteBooks[bookId]
+      
+      const response = await updateBook(userId, book, null, isFavorite)
+      
+      if (response.status === 'Success') {
+        setFavoriteBooks(response.favoriteBooks || {})
       }
-      setFavoriteBooks({
-        ...favoriteBooks,
-        [bookId]: bookData
-      })
+    } catch (err) {
+      console.error('Error al actualizar favorito:', err)
+      setError('Error al actualizar favorito')
     }
   }
 
@@ -293,30 +283,26 @@ const HomePage = () => {
       </div>
 
       <div className="section-libros">
-        <h2 onClick={() => navigate('/biblioteca')} className="clickable-title" style={{position: 'relative', textAlign: 'center'}}><i className="bi bi-book-half" style={{color: '#000000', marginRight: '8px', fontSize: '24px'}}></i>Mi biblioteca<i className="bi bi-arrow-right" style={{color: '#333', fontSize: '32px', position: 'absolute', right: '0'}}></i></h2>
+        <h2 onClick={() => navigate(`/biblioteca/${userId}`)} className="clickable-title" style={{position: 'relative', textAlign: 'center'}}><i className="bi bi-book-half" style={{color: '#000000', marginRight: '8px', fontSize: '24px'}}></i>Mi biblioteca<i className="bi bi-arrow-right" style={{color: '#333', fontSize: '32px', position: 'absolute', right: '0'}}></i></h2>
         <div className="libros">
-          {Object.values(userBooks)
-            .filter(item => item.status === 'Leyendo')
-            .length > 0 ? (
-            Object.values(userBooks)
-              .filter(item => item.status === 'Leyendo')
-              .map((item, idx) => (
-                <div key={idx} className="book-card">
-                  <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
-                  <div className="book-info">
-                    <h3>{item.book.titulo}</h3>
-                    <p className="author">{item.book.autor}</p>
-                    <p className="year"><i className="bi bi-calendar"></i> {item.book.fechaPublicacion}</p>
-                    <div className="rating">
-                      <span><i className="bi bi-star-fill"></i> {item.book.rating}</span>
-                      <i 
-                        className={`bi ${favoriteBooks[item.book.id || item.book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
-                        onClick={() => toggleFavorite(item.book)}
-                      ></i>
-                    </div>
+          {userBooks.leyendo && userBooks.leyendo.length > 0 ? (
+            userBooks.leyendo.map((book, idx) => (
+              <div key={idx} className="book-card">
+                <img src={book.cover} alt={book.titulo} className="book-image" />
+                <div className="book-info">
+                  <h3>{book.titulo}</h3>
+                  <p className="author">{book.autor}</p>
+                  <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
+                  <div className="rating">
+                    <span><i className="bi bi-star-fill"></i> {book.rating}</span>
+                    <i 
+                      className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                      onClick={() => toggleFavorite(book)}
+                    ></i>
                   </div>
                 </div>
-              ))
+              </div>
+            ))
           ) : (
             <p style={{textAlign: 'center', width: '100%'}}>No hay libros siendo leídos actualmente</p>
           )}
@@ -361,75 +347,81 @@ const HomePage = () => {
           <div className="subcategory-section">
             <h3 className="subcategory-title">Pendiente</h3>
             <div className="libros">
-              {Object.values(userBooks)
-                .filter(item => item.status === 'Pendiente')
-                .map((item, idx) => (
+              {userBooks.pendiente && userBooks.pendiente.length > 0 ? (
+                userBooks.pendiente.map((book, idx) => (
                   <div key={idx} className="book-card">
-                    <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
+                    <img src={book.cover} alt={book.titulo} className="book-image" />
                     <div className="book-info">
-                      <h3>{item.book.titulo}</h3>
-                      <p className="author">{item.book.autor}</p>
-                      <p className="year"><i className="bi bi-calendar"></i> {item.book.fechaPublicacion}</p>
+                      <h3>{book.titulo}</h3>
+                      <p className="author">{book.autor}</p>
+                      <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                       <div className="rating">
-                        <span><i className="bi bi-star-fill"></i> {item.book.rating}</span>
+                        <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                         <i 
-                          className={`bi ${favoriteBooks[item.book.id || item.book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
-                          onClick={() => toggleFavorite(item.book)}
+                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(book)}
                         ></i>
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <p>No hay libros pendientes</p>
+              )}
             </div>
           </div>
 
           <div className="subcategory-section">
             <h3 className="subcategory-title">Leyendo</h3>
             <div className="libros">
-              {Object.values(userBooks)
-                .filter(item => item.status === 'Leyendo')
-                .map((item, idx) => (
+              {userBooks.leyendo && userBooks.leyendo.length > 0 ? (
+                userBooks.leyendo.map((book, idx) => (
                   <div key={idx} className="book-card">
-                    <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
+                    <img src={book.cover} alt={book.titulo} className="book-image" />
                     <div className="book-info">
-                      <h3>{item.book.titulo}</h3>
-                      <p className="author">{item.book.autor}</p>
-                      <p className="year"><i className="bi bi-calendar"></i> {item.book.fechaPublicacion}</p>
+                      <h3>{book.titulo}</h3>
+                      <p className="author">{book.autor}</p>
+                      <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                       <div className="rating">
-                        <span><i className="bi bi-star-fill"></i> {item.book.rating}</span>
+                        <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                         <i 
-                          className={`bi ${favoriteBooks[item.book.id || item.book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
-                          onClick={() => toggleFavorite(item.book)}
+                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(book)}
                         ></i>
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <p>No hay libros siendo leídos</p>
+              )}
             </div>
           </div>
 
           <div className="subcategory-section">
             <h3 className="subcategory-title">Leído</h3>
             <div className="libros">
-              {Object.values(userBooks)
-                .filter(item => item.status === 'Leído')
-                .map((item, idx) => (
+              {userBooks.leido && userBooks.leido.length > 0 ? (
+                userBooks.leido.map((book, idx) => (
                   <div key={idx} className="book-card">
-                    <img src={item.book.cover} alt={item.book.titulo} className="book-image" />
+                    <img src={book.cover} alt={book.titulo} className="book-image" />
                     <div className="book-info">
-                      <h3>{item.book.titulo}</h3>
-                      <p className="author">{item.book.autor}</p>
-                      <p className="year"><i className="bi bi-calendar"></i> {item.book.fechaPublicacion}</p>
+                      <h3>{book.titulo}</h3>
+                      <p className="author">{book.autor}</p>
+                      <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                       <div className="rating">
-                        <span><i className="bi bi-star-fill"></i> {item.book.rating}</span>
+                        <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                         <i 
-                          className={`bi ${favoriteBooks[item.book.id || item.book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
-                          onClick={() => toggleFavorite(item.book)}
+                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(book)}
                         ></i>
                       </div>
                     </div>
                   </div>
-                ))}
+                ))
+              ) : (
+                <p>No hay libros leídos</p>
+              )}
             </div>
           </div>
         </div>
