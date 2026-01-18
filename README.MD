@@ -13,7 +13,7 @@ Una aplicación web moderna para gestionar tu biblioteca personal de libros, cla
 - **Favoritos**: Marca tus libros preferidos
 - **Búsqueda**: Busca libros por título, autor o categoría
 - **Gestión de cuenta**: Opción para eliminar la cuenta
-- **Persistencia**: Datos guardados en localStorage y base de datos MongoDB
+- **Persistencia**: Todos los datos guardados en base de datos MongoDB (incluyendo biblioteca personal y favoritos)
 
 ## 📋 Requisitos Previos
 
@@ -207,8 +207,8 @@ app proyecto final/
 - Revisa la consola del navegador para errores
 
 ### Errores de autenticación
-- Limpia el localStorage y vuelve a iniciar sesión
-- Verifica que los tokens se guarden correctamente
+- Inicia sesión nuevamente si los tokens han expirado
+- Verifica que el servidor MongoDB esté accesible
 
 ## 📄 Licencia
 
