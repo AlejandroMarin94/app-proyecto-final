@@ -27,10 +27,6 @@
   gap: 0.5rem;
 }
 
-.back-button:hover {
-  color: #666;
-}
-
 .biblioteca-header h1 {
   color: #333;
   text-align: center;
