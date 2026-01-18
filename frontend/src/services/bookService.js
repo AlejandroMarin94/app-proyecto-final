@@ -99,21 +99,13 @@ export async function updateBook(userId, book, newStatus, isFavorite) {
     try {
         const token = localStorage.getItem('token');
         
-        const payload = { book, newStatus, isFavorite };
-        console.log('📤 Enviando updateBook:', {
-            userId,
-            titulo: book.titulo,
-            book_id: book._id,
-            payload
-        });
-        
         const response = await fetch(`/api/books/biblioteca/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
                 'auth-token': token || ''
             },
-            body: JSON.stringify(payload)
+            body: JSON.stringify({ book, newStatus, isFavorite })
         });
         
         if (response.status === 401) {

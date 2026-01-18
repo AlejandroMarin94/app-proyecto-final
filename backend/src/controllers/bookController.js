@@ -97,10 +97,8 @@ const updateBookStatus = async (req, res) => {
     if (isFavorite !== null && isFavorite !== undefined) {
       if (isFavorite) {
         user.favoriteBooks[bookId] = book;
-        console.log('➕ Agregado a favoritos:', bookId);
       } else {
         delete user.favoriteBooks[bookId];
-        console.log('➖ Removido de favoritos:', bookId);
       }
       // IMPORTANTE: Decirle a Mongoose que favoriteBooks fue modificado
       user.markModified('favoriteBooks');
@@ -132,10 +130,6 @@ const updateBookStatus = async (req, res) => {
 
     await user.save();
 
-    console.log('✅ ANTES DE RESPONDER en updateBookStatus, favoriteBooks tiene:', {
-      count: Object.keys(user.favoriteBooks).length,
-      titles: Object.keys(user.favoriteBooks)
-    });
 
     res.json({
       status: 'Success',

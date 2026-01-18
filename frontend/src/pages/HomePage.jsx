@@ -127,19 +127,7 @@ const HomePage = () => {
       const bookId = book.titulo
       const isFavorite = !favoriteBooks[bookId]
       
-      console.log('🔷 toggleFavorite:', {
-        titulo: book.titulo,
-        bookId,
-        currentFavoriteBooks: favoriteBooks,
-        isFavorite
-      })
-      
       const response = await updateBook(userId, book, null, isFavorite)
-      
-      console.log('🔶 Response del servidor:', {
-        status: response.status,
-        favoriteBooks: response.favoriteBooks
-      })
       
       if (response.status === 'Success') {
         setFavoriteBooks(response.favoriteBooks || {})
