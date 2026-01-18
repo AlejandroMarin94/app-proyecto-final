@@ -75,6 +75,20 @@ const BibliotecaPage = () => {
     }
   }
 
+  const removeBook = (book, section) => {
+    const newUserBooks = { ...userBooks }
+    newUserBooks[section] = newUserBooks[section].filter(b => (b.id || b.titulo) !== (book.id || book.titulo))
+    setUserBooks(newUserBooks)
+    
+    const savedUserBooks = localStorage.getItem('userBooks')
+    if (savedUserBooks) {
+      const parsedBooks = JSON.parse(savedUserBooks)
+      const bookId = book.id || book.titulo
+      delete parsedBooks[bookId]
+      localStorage.setItem('userBooks', JSON.stringify(parsedBooks))
+    }
+  }
+
   return (
     <div className="biblioteca-page-container">
       <div className="biblioteca-header">
@@ -98,10 +112,17 @@ const BibliotecaPage = () => {
                     <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                     <div className="rating">
                       <span><i className="bi bi-star-fill"></i> {book.rating}</span>
-                      <i 
-                        className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
-                        onClick={() => toggleFavorite(book)}
-                      ></i>
+                      <div className="book-actions">
+                        <i 
+                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(book)}
+                        ></i>
+                        <i 
+                          className="bi bi-trash delete-icon"
+                          onClick={() => removeBook(book, 'pendiente')}
+                          title="Eliminar libro"
+                        ></i>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -125,10 +146,17 @@ const BibliotecaPage = () => {
                     <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                     <div className="rating">
                       <span><i className="bi bi-star-fill"></i> {book.rating}</span>
-                      <i 
-                        className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
-                        onClick={() => toggleFavorite(book)}
-                      ></i>
+                      <div className="book-actions">
+                        <i 
+                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(book)}
+                        ></i>
+                        <i 
+                          className="bi bi-trash delete-icon"
+                          onClick={() => removeBook(book, 'leyendo')}
+                          title="Eliminar libro"
+                        ></i>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -152,10 +180,17 @@ const BibliotecaPage = () => {
                     <p className="year"><i className="bi bi-calendar"></i> {book.fechaPublicacion}</p>
                     <div className="rating">
                       <span><i className="bi bi-star-fill"></i> {book.rating}</span>
-                      <i 
-                        className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
-                        onClick={() => toggleFavorite(book)}
-                      ></i>
+                      <div className="book-actions">
+                        <i 
+                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          onClick={() => toggleFavorite(book)}
+                        ></i>
+                        <i 
+                          className="bi bi-trash delete-icon"
+                          onClick={() => removeBook(book, 'leido')}
+                          title="Eliminar libro"
+                        ></i>
+                      </div>
                     </div>
                   </div>
                 </div>

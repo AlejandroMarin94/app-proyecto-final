@@ -178,3 +178,31 @@
     font-size: 1.5rem;
   }
 }
+.book-actions {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.heart-icon {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+}
+
+.heart-icon:hover {
+  transform: scale(1.2);
+  color: #ff4757;
+}
+
+.delete-icon {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2rem;
+  color: #999;
+}
+
+.delete-icon:hover {
+  transform: scale(1.2);
+  color: #ff4757;
+}
