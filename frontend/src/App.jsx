@@ -5,6 +5,7 @@ import MainLayout from "./layout/MainLayout";
 import HomePage from "./pages/HomePage";
 import PerfilPage from "./pages/PerfilPage";
 import BibliotecaPage from "./pages/BibliotecaPage";
+import NotFoundPage from "./pages/NotFoundPage";
 
 function App() {
   return (
@@ -44,6 +45,8 @@ function App() {
       >
         <Route index element={<BibliotecaPage />} />
       </Route>
+
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   )
 }
