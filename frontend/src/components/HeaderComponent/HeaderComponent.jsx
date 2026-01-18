@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { deleteUserAccount } from '../../services/userService'
 import ConfirmDialog from '../ConfirmDialog/ConfirmDialog'
 import '../../styles/header.css'
@@ -9,6 +9,7 @@ const HeaderComponent = ({ onSearch }) => {
   const [showConfirmDelete, setShowConfirmDelete] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
   const navigate = useNavigate()
+  const location = useLocation()
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -76,21 +77,23 @@ const HeaderComponent = ({ onSearch }) => {
         </Link>
 
        
-        <div className="header-search-div">
-          <input 
-            type="text" 
-            placeholder="Buscar libros..." 
-            className="header-search-input"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === 'Enter' && searchQuery.trim()) {
-                onSearch && onSearch(searchQuery)
-                setSearchQuery('')
-              }
-            }}
-          />
-        </div>
+        {location.pathname === '/homepage' && (
+          <div className="header-search-div">
+            <input 
+              type="text" 
+              placeholder="Buscar libros..." 
+              className="header-search-input"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === 'Enter' && searchQuery.trim()) {
+                  onSearch && onSearch(searchQuery)
+                  setSearchQuery('')
+                }
+              }}
+            />
+          </div>
+        )}
 
         <div className={`header-profile-div ${isMenuOpen ? 'active' : ''}`}>
           <button 
