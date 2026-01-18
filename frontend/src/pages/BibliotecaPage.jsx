@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { getUserLibrary, updateBook, removeBookFromLibrary } from '../services/bookService'
 import '../styles/bibliotecaPage.css'
@@ -13,9 +13,8 @@ const BibliotecaPage = () => {
   })
   const [favoriteBooks, setFavoriteBooks] = useState({})
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
-  const loadBooks = async () => {
+  const loadBooks = useCallback(async () => {
     try {
       setLoading(true)
       if (!userId) return
@@ -31,21 +30,21 @@ const BibliotecaPage = () => {
       }
     } catch (err) {
       console.error('Error al cargar biblioteca:', err)
-      setError('Error al cargar biblioteca')
     } finally {
       setLoading(false)
     }
-  }
+  }, [userId])
 
   useEffect(() => {
     loadBooks()
-  }, [userId])
+  }, [loadBooks, userId])
 
   const toggleFavorite = async (book) => {
     try {
       if (!userId) return
       
-      const bookId = book.id || book.titulo
+      // Usar el TÍTULO como identificador para favoritos (consistente con BD)
+      const bookId = book.titulo
       const isFavorite = !favoriteBooks[bookId]
       
       const response = await updateBook(userId, book, null, isFavorite)
@@ -55,22 +54,6 @@ const BibliotecaPage = () => {
       }
     } catch (err) {
       console.error('Error al actualizar favorito:', err)
-      setError('Error al actualizar favorito')
-    }
-  }
-
-  const changeStatus = async (book, fromSection, toStatus) => {
-    try {
-      if (!userId) return
-      
-      const response = await updateBook(userId, book, toStatus, null)
-      
-      if (response.status === 'Success') {
-        setUserBooks(response.userBooks)
-      }
-    } catch (err) {
-      console.error('Error al cambiar estado:', err)
-      setError('Error al cambiar estado')
     }
   }
 
@@ -86,7 +69,6 @@ const BibliotecaPage = () => {
       }
     } catch (err) {
       console.error('Error al remover libro:', err)
-      setError('Error al remover libro')
     }
   }
 
@@ -119,7 +101,7 @@ const BibliotecaPage = () => {
                       <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                       <div className="book-actions">
                         <i 
-                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                           onClick={() => toggleFavorite(book)}
                         ></i>
                         <i 
@@ -153,7 +135,7 @@ const BibliotecaPage = () => {
                       <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                       <div className="book-actions">
                         <i 
-                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                           onClick={() => toggleFavorite(book)}
                         ></i>
                         <i 
@@ -187,7 +169,7 @@ const BibliotecaPage = () => {
                       <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                       <div className="book-actions">
                         <i 
-                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                           onClick={() => toggleFavorite(book)}
                         ></i>
                         <i 

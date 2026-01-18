@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { useOutletContext, useNavigate } from 'react-router-dom'
 import { getAllBooks, getUserLibrary, addBookToLibrary, updateBook } from '../services/bookService'
 import '../styles/homePage.css'
@@ -10,9 +10,7 @@ const HomePage = () => {
   const [allBooks, setAllBooks] = useState([])
   const [googleBooks, setGoogleBooks] = useState([])
   const [loading, setLoading] = useState(true)
-  const [loadingSearch, setLoadingSearch] = useState(false)
   const [error, setError] = useState(null)
-  const [errorSearch, setErrorSearch] = useState(null)
   const [openDropdown, setOpenDropdown] = useState(null)
   const [selectedStatus, setSelectedStatus] = useState({})
   const [currentSection, setCurrentSection] = useState(null)
@@ -26,7 +24,7 @@ const HomePage = () => {
   const userId = JSON.parse(localStorage.getItem('userData'))?._id
 
   // Cargar biblioteca del usuario
-  const loadUserLibrary = async () => {
+  const loadUserLibrary = useCallback(async () => {
     try {
       if (!userId) return
       const data = await getUserLibrary(userId)
@@ -41,7 +39,7 @@ const HomePage = () => {
     } catch (err) {
       console.error('Error al cargar biblioteca del usuario:', err)
     }
-  }
+  }, [userId])
 
   // Cargar todos los libros
   useEffect(() => {
@@ -72,7 +70,7 @@ const HomePage = () => {
   // Cargar biblioteca del usuario
   useEffect(() => {
     loadUserLibrary()
-  }, [userId])
+  }, [userId, loadUserLibrary])
 
   // Filtrar libros por búsqueda
   useEffect(() => {
@@ -125,10 +123,23 @@ const HomePage = () => {
     try {
       if (!userId) return
       
-      const bookId = book.id || book.titulo
+      // Usar el TÍTULO como identificador para favoritos (consistente con BD)
+      const bookId = book.titulo
       const isFavorite = !favoriteBooks[bookId]
       
+      console.log('🔷 toggleFavorite:', {
+        titulo: book.titulo,
+        bookId,
+        currentFavoriteBooks: favoriteBooks,
+        isFavorite
+      })
+      
       const response = await updateBook(userId, book, null, isFavorite)
+      
+      console.log('🔶 Response del servidor:', {
+        status: response.status,
+        favoriteBooks: response.favoriteBooks
+      })
       
       if (response.status === 'Success') {
         setFavoriteBooks(response.favoriteBooks || {})
@@ -148,8 +159,8 @@ const HomePage = () => {
             <div className="libros-google">
           {searchQuery ? (
             <>
-              {loadingSearch && <p>Cargando libros...</p>}
-              {errorSearch && <p className="error">{errorSearch}</p>}
+              {loading && <p>Cargando libros...</p>}
+              {error && <p className="error">{error}</p>}
               {googleBooks.length > 0 ? (
                 <div className="books-grid">
                   {googleBooks.map((book, index) => (
@@ -168,7 +179,7 @@ const HomePage = () => {
                             <div className="rating">
                               <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                               <i 
-                                className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                                className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                                 onClick={() => toggleFavorite(book)}
                               ></i>
                             </div>
@@ -234,7 +245,7 @@ const HomePage = () => {
                             <div className="rating">
                               <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                               <i 
-                                className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                                className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                                 onClick={() => toggleFavorite(book)}
                               ></i>
                             </div>
@@ -296,7 +307,7 @@ const HomePage = () => {
                   <div className="rating">
                     <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                     <i 
-                      className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                      className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                       onClick={() => toggleFavorite(book)}
                     ></i>
                   </div>
@@ -358,7 +369,7 @@ const HomePage = () => {
                       <div className="rating">
                         <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                         <i 
-                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                           onClick={() => toggleFavorite(book)}
                         ></i>
                       </div>
@@ -385,7 +396,7 @@ const HomePage = () => {
                       <div className="rating">
                         <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                         <i 
-                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                           onClick={() => toggleFavorite(book)}
                         ></i>
                       </div>
@@ -412,7 +423,7 @@ const HomePage = () => {
                       <div className="rating">
                         <span><i className="bi bi-star-fill"></i> {book.rating}</span>
                         <i 
-                          className={`bi ${favoriteBooks[book.id || book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
+                          className={`bi ${favoriteBooks[book.titulo] ? 'bi-heart-fill' : 'bi-heart'} heart-icon`}
                           onClick={() => toggleFavorite(book)}
                         ></i>
                       </div>
