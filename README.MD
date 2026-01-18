@@ -25,7 +25,7 @@ Una aplicación web moderna para gestionar tu biblioteca personal de libros, cla
 
 ### 1. Clonar el repositorio
 ```bash
-git clone <tu-repositorio>
+git clone <repositorio>
 cd "app proyecto final"
 ```
 
@@ -69,7 +69,7 @@ La aplicación estará disponible en `http://localhost:5173`
 
 ## 📚 Cargar Base de Datos de Libros
 
-**IMPORTANTE**: Antes de usar la aplicación, debes popular la base de datos con los libros disponibles.
+**IMPORTANTE**: Antes de usar la aplicación, debes poblar la base de datos con los libros disponibles.
 
 ### Pasos:
 
